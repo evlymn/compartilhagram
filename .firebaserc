@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "compartilhagram-com"
+  },
+  "targets": {
+    "compartilhagram-com": {
+      "hosting": {
+        "compartilhagram": [
+          "compartilhagram-com"
+        ]
+      }
+    }
+  }
+}

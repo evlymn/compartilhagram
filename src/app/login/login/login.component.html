@@ -1,0 +1,38 @@
+<div class="content">
+  <mat-card >
+    <form action="">
+      <mat-card-title>Bem Vinda(o)</mat-card-title>
+      <div class="avatar" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple [matRippleCentered]="true"
+        style="background-image:url('https://material.angular.io/assets/img/examples/shiba2.jpg')">
+      </div>
+      <button mat-button  color="avatar-button" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+        <mat-icon aria-hidden="false">face</mat-icon>
+        <label class="avatar-label">Foto de perfil</label>
+      </button>
+      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'"
+       >
+        <input matInput placeholder="&nbsp;nome">
+        <mat-icon matPrefix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="legacy">
+        <input matInput placeholder="&nbsp;email">
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="legacy">
+        <input matInput placeholder="&nbsp;senha" type="password">
+        <mat-icon matPrefix>lock</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+        <input matInput placeholder="&nbsp;repetir a senha" type="password">
+        <mat-icon matPrefix>lock</mat-icon>
+      </mat-form-field>
+      <button mat-flat-button color="primary">
+        {{ isSignUp ? 'Registrar' : 'Logar' }}
+      </button>
+    </form>
+    <a mat-button class="signInUp" color="primary" (click)="signInUp()">{{ isSignUp ? "fazer login": "registre-se" }} </a>
+  </mat-card>
+</div>
