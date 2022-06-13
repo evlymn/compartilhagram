@@ -78,16 +78,19 @@ export class LoginComponent implements OnInit {
   }
 
   fileChangeEvent(event: any) {
-    const dialogRef = this.dialog.open(ImageProfileDialogComponent, {
-      panelClass: 'ImageProfileDialogComponent',
-      data: event,
-    });
+    // console.log(event.target.files[0]);
+    if (event.target.files[0]) {
+      const dialogRef = this.dialog.open(ImageProfileDialogComponent, {
+        panelClass: 'ImageProfileDialogComponent',
+        data: event,
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.changeAvatarStyle(result)
-      }
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.changeAvatarStyle(result)
+        }
+      });
+    }
   }
 
 
