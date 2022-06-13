@@ -61,13 +61,20 @@ import { ImageProfileDialogComponent } from './image-profile-dialog/image-profil
   ],
 })
 export class LoginComponent implements OnInit {
-  profileUrl = 'background-image: url(\'https://material.angular.io/assets/img/examples/shiba2.jpg\')';
+  imageUrl = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
+  avatarStyle = `background-image: url(${this.imageUrl})`;
   submitText = 'Logar';
   changeButtonText = 'registre-se';
   isSignUp = false;
   constructor(public dialog: MatDialog) { }
   signInUp() {
     this.isSignUp = !this.isSignUp;
+    if (!this.isSignUp)
+      this.changeAvatarStyle(this.imageUrl);
+  }
+
+  changeAvatarStyle(imageUrl: string) {
+    this.avatarStyle = imageUrl ? `background-image: url(${imageUrl})` : this.avatarStyle;
   }
 
   fileChangeEvent(event: any) {
@@ -77,7 +84,9 @@ export class LoginComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.profileUrl = result ? `background-image: url(${result})` : this.profileUrl;
+      if (result) {
+        this.changeAvatarStyle(result)
+      }
     });
   }
 
