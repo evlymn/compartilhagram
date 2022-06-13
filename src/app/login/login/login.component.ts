@@ -65,18 +65,13 @@ export class LoginComponent implements OnInit {
   submitText = 'Logar';
   changeButtonText = 'registre-se';
   isSignUp = false;
-  cardOpen = false;
   constructor(public dialog: MatDialog) { }
   signInUp() {
     this.isSignUp = !this.isSignUp;
-    this.submitText = this.cardOpen ? 'Registrar' : 'Logar';
-    this.changeButtonText = this.cardOpen ? "fazer login" : "registre-se";
   }
 
   fileChangeEvent(event: any) {
     const dialogRef = this.dialog.open(ImageProfileDialogComponent, {
-      // width: '50px',
-      // height: '50px',
       panelClass: 'ImageProfileDialogComponent',
       data: event,
     });
