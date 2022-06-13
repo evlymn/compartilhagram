@@ -9,10 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatRippleModule } from '@angular/material/core';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ImageProfileDialogComponent } from './login/image-profile-dialog/image-profile-dialog.component';
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    ImageProfileDialogComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +27,9 @@ import { MatRippleModule } from '@angular/material/core';
     MatButtonModule,
     BrowserModule,
     BrowserAnimationsModule,
-    MatRippleModule
+    MatRippleModule,
+    ImageCropperModule,
+    MatDialogModule
   ]
 })
 export class LoginModule { }

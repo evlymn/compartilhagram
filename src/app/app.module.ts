@@ -42,7 +42,7 @@ import { LoginModule } from './login/login.module';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
     BrowserAnimationsModule,
-MaterialModule ,
+    MaterialModule,
 
     LoginModule
   ],

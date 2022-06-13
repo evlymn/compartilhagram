@@ -6,13 +6,14 @@
   justify-content: center;
 }
 mat-card {
- // height: 500px;
+  // height: 500px;
   width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px !important;
+  box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px,
+    rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px !important;
 }
 mat-card-title {
   text-align: center;
@@ -26,10 +27,10 @@ input {
 mat-form-field,
 button,
 a {
-  width: 250px!important;
+  width: 250px !important;
 }
 
-button> span {
+button > span {
   width: 100%;
 }
 
@@ -43,9 +44,9 @@ form {
   opacity: 0;
   display: flex;
   align-items: center;
-justify-content: center;
-   width: 0px;
-   height: 0px;
+  justify-content: center;
+  width: 0px;
+  height: 0px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -59,12 +60,22 @@ justify-content: center;
 .avatar-button {
   display: flex;
   align-items: center;
-justify-content: center;
+  justify-content: center;
 }
 
-.avatar-label{
-  margin-left : 5px;
+.avatar-label {
+  margin-left: 5px;
 }
 .signInUp {
   margin-top: 50px;
 }
+::ng-deep .ImageProfileDialogComponent {
+  mat-dialog-container {
+    padding: 6px;
+  }
+  mat-dialog-actions {
+    height: 20px!important;
+  }
+}
+
+// mat-dialog-actions

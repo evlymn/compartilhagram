@@ -1,16 +1,18 @@
 <div class="content">
-  <mat-card >
+  <mat-card>
     <form action="">
       <mat-card-title>Bem Vinda(o)</mat-card-title>
-      <div class="avatar" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple [matRippleCentered]="true"
-        style="background-image:url('https://material.angular.io/assets/img/examples/shiba2.jpg')">
+
+      <div class="avatar" (click)="file.click()" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple
+        [matRippleCentered]="true" [style]="profileUrl">
       </div>
-      <button mat-button  color="avatar-button" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+
+      <button type="button" (click)="file.click()" mat-button color="avatar-button"
+        [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
         <mat-icon aria-hidden="false">face</mat-icon>
         <label class="avatar-label">Foto de perfil</label>
       </button>
-      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'"
-       >
+      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
         <input matInput placeholder="&nbsp;nome">
         <mat-icon matPrefix>person</mat-icon>
       </mat-form-field>
@@ -33,6 +35,9 @@
         {{ isSignUp ? 'Registrar' : 'Logar' }}
       </button>
     </form>
-    <a mat-button class="signInUp" color="primary" (click)="signInUp()">{{ isSignUp ? "fazer login": "registre-se" }} </a>
+    <a mat-button class="signInUp" color="primary" (click)="signInUp()">{{ isSignUp ? "fazer login": "registre-se" }}
+    </a>
   </mat-card>
 </div>
+<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/x-png,image/gif,image/jpeg"
+  #file />

@@ -1,0 +1,14 @@
+<div class="component">
+  <mat-dialog-content>
+    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4"
+      format="png" (imageCropped)="imageCropped($event)" (cropperReady)="cropperReady()"
+      (loadImageFailed)="loadImageFailed()">
+    </image-cropper>
+  </mat-dialog-content>
+  <div class="actions">
+    <a  class="signInUp" (click)="okClose()" >ok
+    </a>
+    <a  class="signInUp" (click)="cancelClose()" >cancelar
+    </a>
+  </div>
+</div>
