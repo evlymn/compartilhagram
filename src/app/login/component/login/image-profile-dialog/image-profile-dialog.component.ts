@@ -16,9 +16,6 @@ export class ImageProfileDialogComponent implements OnInit {
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
-
-    console.log(this.imageChangedEvent, event);
-    //this.dialogRef.close(this.croppedImage);
   }
 
   okClose() {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './component/login/login.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,12 +11,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatRippleModule } from '@angular/material/core';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ImageProfileDialogComponent } from './login/image-profile-dialog/image-profile-dialog.component';
-
+import { ImageProfileDialogComponent } from './component/login/image-profile-dialog/image-profile-dialog.component';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { CompareToDirective } from './directives/compare-to/compare-to.directive';
 @NgModule({
   declarations: [
     LoginComponent,
-    ImageProfileDialogComponent
+    ImageProfileDialogComponent,
+    CompareToDirective
   ],
   imports: [
     CommonModule,
@@ -29,7 +31,9 @@ import { ImageProfileDialogComponent } from './login/image-profile-dialog/image-
     BrowserAnimationsModule,
     MatRippleModule,
     ImageCropperModule,
-    MatDialogModule
+    MatDialogModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class LoginModule { }

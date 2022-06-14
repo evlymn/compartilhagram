@@ -29,7 +29,9 @@ button,
 a {
   width: 250px !important;
 }
-
+button {
+  margin-top: 10px;
+}
 button > span {
   width: 100%;
 }
@@ -78,4 +80,10 @@ form {
   }
 }
 
-// mat-dialog-actions
+.error {
+color: chocolate;
+}
+
+small{
+  color: rgb(242, 0, 0);
+}
