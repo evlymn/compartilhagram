@@ -1,89 +1,72 @@
 import { Component, OnInit, } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-} from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageProfileDialogComponent } from './image-profile-dialog/image-profile-dialog.component';
-import { FormControl, NgForm, Validators } from '@angular/forms';
-
+import { AbstractControl, FormBuilder, FormControl, FormGroupDirective, Validators } from '@angular/forms';
+import { LoginAnimations } from '../../animations/login.animations'
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  animations: LoginAnimations,
 
-  animations: [
-    trigger('openCloseAvatar', [
-      state('open',
-        style({
-          opacity: 1,
-          height: '100px',
-          width: '100px'
-        })
-      ),
-      state('closed', style({
-        opacity: 0,
-        height: '0px',
-        width: '0px'
-      })),
-      transition('open => closed', [
-        animate('.5s',
-        ),
-
-      ]),
-      transition('closed => open', [
-        animate('.5s',
-        ),
-      ]),
-    ]),
-    trigger('openCloseFields', [
-      state('open',
-        style({
-          opacity: 1,
-        })
-      ),
-      state('closed', style({
-        opacity: 0,
-        height: '0px',
-        width: '0px'
-      })),
-      transition('open => closed', [
-        animate('.6s'),
-
-      ]),
-      transition('closed => open', [
-        animate('.6s',
-        ),
-      ]),
-    ]),
-  ],
 })
 export class LoginComponent implements OnInit {
-  name = new FormControl('', [Validators.required]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required]);
-  rPassword = new FormControl('', [Validators.required]);
-  submited =false;
-  img64 ='';
+  submited = false;
+  img64 = '';
   imageUrl = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
   avatarStyle = `background-image: url(${this.imageUrl})`;
   submitText = 'Logar';
   changeButtonText = 'registre-se';
   isSignUp = false;
-  constructor(public dialog: MatDialog) { }
-  signInUp() {
-    this.isSignUp = !this.isSignUp;
-    this.img64 ='';
-    this.submited =false
-    this.changeAvatarStyle(this.imageUrl);
-    if (!this.isSignUp){
+  form;
 
-    }
+  public get name(): AbstractControl | null {
+    return this.form.get("name");
+  }
+  public get email(): AbstractControl | null {
+    return this.form.get("email");
+  }
+  public get password(): AbstractControl | null {
+    return this.form.get("password");
+  }
+  public get rPassword(): AbstractControl | null {
+    return this.form.get("rPassword");
   }
 
+  constructor(public dialog: MatDialog, private formBuilder: FormBuilder) {
+    this.form = this.formBuilder.group({
+      name: new FormControl({ value: '', disabled: true }, [Validators.required],),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+      rPassword: new FormControl({ value: '', disabled: true }, [Validators.required]),
+    });
+  }
+  setSignInUp(formDirective: FormGroupDirective) {
+    this.isSignUp = !this.isSignUp;
+    this.resetForm(formDirective);
+    this.img64 = '';
+    this.submited = false
+    this.changeAvatarStyle(this.imageUrl);
+  }
+
+  resetForm(formDirective: FormGroupDirective) {
+    this.name?.setValue('');
+    this.name?.markAsUntouched();
+    this.name?.markAsPristine();
+    this.email?.setValue('');
+    this.email?.markAsUntouched();
+    this.email?.markAsPristine();
+    this.password?.setValue('');
+    this.password?.markAsUntouched();
+    this.password?.markAsPristine();
+    this.rPassword?.setValue('');
+    this.rPassword?.markAsUntouched();
+    this.rPassword?.markAsPristine();
+    this.isSignUp ? this.form.get('name')?.enable() : this.form.get('name')?.disable();
+    this.isSignUp ? this.form.get('rPassword')?.enable() : this.form.get('rPassword')?.disable();
+    formDirective.resetForm();
+
+  }
   changeAvatarStyle(imageUrl: string) {
     this.avatarStyle = imageUrl ? `background-image: url(${imageUrl})` : this.avatarStyle;
   }
@@ -98,20 +81,21 @@ export class LoginComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.img64 = result;
-
-          this.changeAvatarStyle( this.img64)
+          this.changeAvatarStyle(this.img64)
         }
       });
     }
   }
 
-  submit(f: NgForm) {
-    this.submited =true;
-    if(f.invalid)
-      console.log('dd');
-  }
-  debugErros(erros: any) {
-    console.log(JSON.stringify(erros));
+  submit() {
+    this.submited = true;
+    if (!this.isSignUp) {
+      if (this.form.valid)
+        console.log('valid login');
+    } else if (this.isSignUp && this.img64) {
+      if (this.form.valid)
+        console.log('valid signUp');
+    }
   }
 
   ngOnInit(): void {

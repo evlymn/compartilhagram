@@ -1,66 +1,56 @@
 <div class="content">
   <mat-card>
-    <form #form="ngForm" (ngSubmit)="submit(form)"   >
+    <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="submit()">
       <mat-card-title>Bem Vinda(o)</mat-card-title>
-
       <div class="avatar" (click)="file.click()" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple
         [matRippleCentered]="true" [style]="avatarStyle">
       </div>
-
       <button type="button" (click)="file.click()" mat-button color="avatar-button"
         [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
         <mat-icon aria-hidden="false">face</mat-icon>
         <label class="avatar-label">Foto de perfil</label>
       </button>
-      <small  *ngIf="isSignUp && submited && img64.trim().length == 0"> Quem sabe uma fotinha sua? 👆🏼👆🏼</small>
-      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
-        <input matInput placeholder="&nbsp;nome" [formControl]="name">
+      <small *ngIf="isSignUp && submited && img64.trim().length == 0"> Quem sabe uma fotinha sua? 👆🏼👆🏼</small>
+      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'"  >
+        <input matInput placeholder="&nbsp;nome" formControlName="name"  >
         <mat-icon matPrefix>person</mat-icon>
         <mat-error>
           Qual seu nome?
         </mat-error>
       </mat-form-field>
-
       <mat-form-field appearance="legacy">
-        <input matInput placeholder="&nbsp;email" type="email" required [formControl]="email">
+        <input matInput placeholder="&nbsp;email" type="email" required formControlName="email">
         <mat-icon matPrefix>email</mat-icon>
-        <mat-error *ngIf="email.value == ''">
+        <mat-error  *ngIf="!email?.getError('email')">
           Qual seu email?
         </mat-error>
-        <mat-error *ngIf="email.errors && email.errors['email']">
+        <mat-error *ngIf="email?.value?.trim().length > 0 && email?.getError('email')">
           Acho que vc digitou algo errado!
         </mat-error>
       </mat-form-field>
-
       <mat-form-field appearance="legacy">
-        <input matInput placeholder="&nbsp;senha"   type="password" required [formControl]="password">
+        <input matInput placeholder="&nbsp;senha" type="password" required formControlName="password">
         <mat-icon matPrefix>lock</mat-icon>
         <mat-error>
           Todo cadastro precisa de uma senha :)
         </mat-error>
       </mat-form-field>
-
       <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
-        <input matInput [appCompareTo]="password" placeholder="&nbsp;repetir a senha" type="password"
-          [formControl]="rPassword" required>
+        <input matInput [appCompareTo]="password"   formControlName="rPassword" placeholder="&nbsp;repetir a senha"
+          type="password" required>
         <mat-icon matPrefix>lock</mat-icon>
-        <!-- <mat-hint class="error" *ngIf="(rPassword.dirty || rPassword.touched)">dddd</mat-hint> -->
-        <!-- && (rPassword.errors && rPassword.errors['Values don\'t match']) -->
-        <mat-error *ngIf=" rPassword.value ==''">
+        <mat-error *ngIf=" !rPassword?.getError('compareTo')">
           Pode repetir, please?
         </mat-error>
-        <mat-error
-          *ngIf=" rPassword.value.trim() !='' && (rPassword.errors && rPassword.errors['compareTo'])">
-          Acho que vc digitou outra coisa aqui 🙃
+        <mat-error *ngIf=" rPassword?.value?.length > 0 && (rPassword?.getError('compareTo'))">
+          Oops, algo não confere aqui! 🙃
         </mat-error>
-
       </mat-form-field>
-
       <button type="submit" mat-flat-button color="primary">
         {{ isSignUp ? 'Registrar' : 'Logar' }}
       </button>
     </form>
-    <a mat-button class="signInUp" color="primary" (click)="form.resetForm(); signInUp()">{{ isSignUp ? "fazer login": "registre-se" }}
+    <a mat-button class="signInUp" color="primary" (click)="setSignInUp(formDirective)">{{ isSignUp ? "fazer login": "registre-se" }}
     </a>
   </mat-card>
 </div>

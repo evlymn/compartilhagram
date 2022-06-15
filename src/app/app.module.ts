@@ -15,7 +15,6 @@ import { provideRemoteConfig, getRemoteConfig } from '@angular/fire/remote-confi
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material-module';
 import { LoginModule } from './login/login.module';
 
 @NgModule({
@@ -42,8 +41,6 @@ import { LoginModule } from './login/login.module';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
     BrowserAnimationsModule,
-    MaterialModule,
-
     LoginModule
   ],
   providers: [
