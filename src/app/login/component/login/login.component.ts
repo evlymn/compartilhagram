@@ -89,11 +89,9 @@ export class LoginComponent implements OnInit {
 
   submit() {
     this.submited = true;
-    if (!this.isSignUp) {
-      if (this.form.valid)
+    if (!this.isSignUp && this.form.valid) {
         console.log('valid login');
-    } else if (this.isSignUp && this.img64) {
-      if (this.form.valid)
+    } else if (this.isSignUp && this.img64 && this.form.valid) {
         console.log('valid signUp');
     }
   }
