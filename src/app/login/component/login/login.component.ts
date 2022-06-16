@@ -6,9 +6,9 @@ import { LoginAnimations } from '../../animations/login.animations'
 import { LoginService } from '../../login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProgressBarMode } from '@angular/material/progress-bar';
+import { ErrorMessage } from '../../error-message/error-message';
 
 @Component({
-
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -16,6 +16,25 @@ import { ProgressBarMode } from '@angular/material/progress-bar';
 
 })
 export class LoginComponent implements OnInit {
+
+  @ViewChild('file') file!: ElementRef;
+
+  public get name(): AbstractControl | null {
+    return this.form.get("name");
+  }
+
+  public get email(): AbstractControl | null {
+    return this.form.get("email");
+  }
+
+  public get password(): AbstractControl | null {
+    return this.form.get("password");
+  }
+
+  public get rPassword(): AbstractControl | null {
+    return this.form.get("rPassword");
+  }
+
   submited = false;
   img64 = '';
   imageUrl = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
@@ -26,21 +45,8 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   fileName = '';
   progress = 0;
-  progressMode: ProgressBarMode = 'buffer';
-
-  public get name(): AbstractControl | null {
-    return this.form.get("name");
-  }
-  public get email(): AbstractControl | null {
-    return this.form.get("email");
-  }
-  public get password(): AbstractControl | null {
-    return this.form.get("password");
-  }
-  public get rPassword(): AbstractControl | null {
-    return this.form.get("rPassword");
-  }
-  @ViewChild('file') file!: ElementRef;
+  progressMode: ProgressBarMode = 'indeterminate';
+  hintMessage = 'Cadastrando usuária(o)...';
 
   constructor(public dialog: MatDialog,
     private _formBuilder: FormBuilder,
@@ -67,12 +73,11 @@ export class LoginComponent implements OnInit {
     this.img64 = '';
     this.submited = false
     this.changeAvatarStyle(this.imageUrl);
-
-    this.isSignUp ? this.form.get('name')?.enable() : this.form.get('name')?.disable();
-    this.isSignUp ? this.form.get('rPassword')?.enable() : this.form.get('rPassword')?.disable();
+    this.isSignUp ? this.name?.enable() : this.name?.disable();
+    this.isSignUp ?this.rPassword?.enable() : this.rPassword?.disable();
     formDirective.resetForm();
     this.progress = 0;
-    this.progressMode = 'buffer';
+    this.progressMode = 'indeterminate';
 
   }
   changeAvatarStyle(imageUrl: string) {
@@ -90,6 +95,7 @@ export class LoginComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         this.file.nativeElement.value = null;
         if (result) {
+          this.submited = false;
           this.img64 = result;
           this.changeAvatarStyle(this.img64)
         }
@@ -98,27 +104,30 @@ export class LoginComponent implements OnInit {
   }
 
   async submit(formDirective: FormGroupDirective) {
+    console.log('submit');
     this.submited = true;
-    if (!this.isSignUp && this.form.valid) {
-      this._service.login(this.email?.value, this.password?.value);
-    } else if (this.isSignUp && this.img64 && this.form.valid) {
-      const uploadTaskSnapshot = await this._service.signUp(this.email?.value, this.password?.value, this.name?.value, this.img64);
-
-      const subs = uploadTaskSnapshot.subscribe(snapshopt => {
-        if (snapshopt.progress == 0)
-           snapshopt.snapshot.task.then(k=>{
-            subs.unsubscribe();
-            this._snackBar.open(`Usuário ${this.name?.value} criado!`, 'ok', {
-              duration: 2000,
-            });
-            this.resetForm(formDirective);
-          })
-        this.progressMode = 'determinate';
-        this.progress = Number.parseInt(snapshopt.progress.toFixed(0));
-        if (this.progress == 100) {
-          this.progressMode = 'indeterminate';
-        }
-      })
+    try {
+      if (!this.isSignUp && this.form.valid) {
+        await this._service.login(this.email?.value, this.password?.value);
+      } else if (this.isSignUp && this.img64 && this.form.valid) {
+        const uploadTaskSnapshot = await this._service.signUp(this.email?.value, this.password?.value, this.name?.value, this.img64);
+        const subs = uploadTaskSnapshot.subscribe(snapshopt => {
+          if (snapshopt.progress == 0) {
+            this.progressMode = 'determinate';
+            snapshopt.snapshot.task.then(_ => {
+              subs.unsubscribe();
+              this.hintMessage = 'redirecionando...';
+              this.progress = 0;
+            })
+          }
+          this.progress = Number.parseInt(snapshopt.progress.toFixed(0));
+        })
+      }
+    } catch (error: any) {
+      this.submited = false;
+      this._snackBar.open(`ocorreu um erro ${ErrorMessage[error.code]}`, 'ok');
+      if (!this.isSignUp)
+        formDirective.resetForm();
     }
   }
 

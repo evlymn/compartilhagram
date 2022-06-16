@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 import { AuthenticationService } from '../shared/services/firebase/authentication/authentication.service';
 import { StorageService } from '../shared/services/firebase/storage/storage.service';
 import { RealtimeService } from '../shared/services/firebase/database/realtime.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor(private auth: AuthenticationService, private storage: StorageService, private database: RealtimeService) { }
+  constructor(private auth: AuthenticationService, private storage: StorageService, private database: RealtimeService,  private router: Router) { }
 
-  login(email: string, password: string) {
-    this.auth.signInWithEmailAndPassword(email, password).then(c => {
-      console.log(c);
-    });
+ async login(email: string, password: string) {
+   await this.auth.signInWithEmailAndPassword(email, password);
   }
 
   async signUp(email: string, password: string, displayName: string, imagem: string) {
@@ -37,19 +36,20 @@ export class LoginService {
         displayName,
         photoURL: url
       })
-      this.logUser('user/' + credentials.user.uid, {
+     await this.logUser('user/' + credentials.user.uid, {
         displayName,
         photoURL: url,
         dateTime: new Date().getTime(),
         provider: credentials.providerId,
-      })
+      });
+      this.router.navigate(['profile']);
     });
 
     return this.storage.percentage(updloadTask)
   }
 
-  logUser(path: string, data: any) {
-    this.database.set(path, data);
+  async logUser(path: string, data: any) {
+    return this.database.set(path, data);
   }
 }
 

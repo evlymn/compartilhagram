@@ -1,6 +1,6 @@
 <div class="content">
   <mat-card>
-    <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="submit(formDirective)">
+    <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="!submited ? submit(formDirective): null">
       <mat-card-title>Bem Vinda(o)</mat-card-title>
       <div class="avatar" (click)="file.click()" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple
         [matRippleCentered]="true" [style]="avatarStyle">
@@ -46,14 +46,14 @@
           Oops, algo não confere aqui! 🙃
         </mat-error>
       </mat-form-field>
-      <button type="submit" mat-flat-button color="primary">
+      <!-- [disabled]="submited && form.valid && (img64.trim().length >0 && isSignUp)" -->
+      <button type="submit" mat-flat-button color="primary" >
         {{ isSignUp ? 'Registrar' : 'Logar' }}
       </button>
       <mat-progress-bar [mode]="progressMode" [style]=" submited && form.valid && img64  ? 'opacity:1' :  'opacity:0'"
         [value]="progress">
       </mat-progress-bar>
-      <small class="hint-submit" [style]="  submited && form.valid && img64  ? 'opacity:1' :  'opacity:0'">Cadastrando
-        usuária(o)... <span *ngIf="progress > 0">{{progress}}%</span> </small>
+      <small class="hint-submit" [style]="  submited && form.valid && img64  ? 'opacity:1' :  'opacity:0'">{{hintMessage}} <span *ngIf="progress > 0">{{progress}}%</span> </small>
     </form>
     <a mat-button class="signInUp" color="primary"
       (click)="setSignInUp(formDirective)">{{ isSignUp ? "fazer login": "registre-se" }}
