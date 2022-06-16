@@ -69,7 +69,7 @@ form {
   margin-left: 5px;
 }
 .signInUp {
-  margin-top: 50px;
+  margin-top: 40px;
 }
 ::ng-deep .ImageProfileDialogComponent {
   mat-dialog-container {
@@ -86,4 +86,12 @@ color: chocolate;
 
 small{
   color: rgb(242, 0, 0);
+}
+
+mat-progress-bar{
+  margin-top: 5px;
+}
+
+.hint-submit {
+  color: gray;
 }

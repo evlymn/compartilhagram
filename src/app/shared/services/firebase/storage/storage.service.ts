@@ -59,7 +59,7 @@ export class StorageService {
     });
   }
 
-  async base64ToFile(base64: string, fileName: string, options: any) {
+  async base64ToFile(base64: string, fileName: string, options?: any) {
     return fetch(base64).then(res =>
       res.blob().then(blob => new File([blob], fileName, options))
     );

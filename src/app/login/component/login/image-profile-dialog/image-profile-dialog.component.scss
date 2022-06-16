@@ -1,12 +1,17 @@
 .component {
   width: 90%;
+  // min-height: 200px;
+
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
 
 image-cropper {
+  // width: 100%;
+  // max-width: 375px;
   height: 100%;
+  min-height: 200px;
   width: auto;
 }
 

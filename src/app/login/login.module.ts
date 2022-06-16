@@ -14,6 +14,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ImageProfileDialogComponent } from './component/login/image-profile-dialog/image-profile-dialog.component';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { CompareToDirective } from './directives/compare-to/compare-to.directive';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -33,7 +37,9 @@ import { CompareToDirective } from './directives/compare-to/compare-to.directive
     ImageCropperModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressBarModule,
+    MatSnackBarModule
   ]
 })
 export class LoginModule { }

@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 
 @Component({
@@ -11,10 +12,12 @@ export class ImageProfileDialogComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   constructor(public dialogRef: MatDialogRef<ImageProfileDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any, private _snackBar: MatSnackBar) {
     this.imageChangedEvent = data;
+
   }
   imageCropped(event: ImageCroppedEvent) {
+    console.log(event);
     this.croppedImage = event.base64;
   }
 
@@ -33,7 +36,7 @@ export class ImageProfileDialogComponent implements OnInit {
     // cropper ready
   }
   loadImageFailed() {
-    // show message
+    this._snackBar.open('Ocorreu um problema', 'ok');
   }
   ngOnInit(): void {
   }
