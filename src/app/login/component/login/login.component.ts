@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   fileName = '';
   progress = 0;
-  progressMode: ProgressBarMode = 'indeterminate';
+  progressMode: ProgressBarMode = 'buffer';
 
   public get name(): AbstractControl | null {
     return this.form.get("name");
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
     this.isSignUp ? this.form.get('rPassword')?.enable() : this.form.get('rPassword')?.disable();
     formDirective.resetForm();
     this.progress = 0;
-    this.progressMode = 'indeterminate';
+    this.progressMode = 'buffer';
 
   }
   changeAvatarStyle(imageUrl: string) {
@@ -80,7 +80,6 @@ export class LoginComponent implements OnInit {
   }
 
   fileChangeEvent(event: any) {
-    console.log(event.target.files[0]);
     if (event.target.files[0]) {
       const dialogRef = this.dialog.open(ImageProfileDialogComponent, {
         panelClass: 'ImageProfileDialogComponent',
@@ -89,6 +88,7 @@ export class LoginComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
+        this.file.nativeElement.value = null;
         if (result) {
           this.img64 = result;
           this.changeAvatarStyle(this.img64)
@@ -102,18 +102,23 @@ export class LoginComponent implements OnInit {
     if (!this.isSignUp && this.form.valid) {
       this._service.login(this.email?.value, this.password?.value);
     } else if (this.isSignUp && this.img64 && this.form.valid) {
-      const task = await this._service.signUp(this.email?.value, this.password?.value, this.name?.value, this.img64);
-      const subs = task.subscribe(snapshopt => {
+      const uploadTaskSnapshot = await this._service.signUp(this.email?.value, this.password?.value, this.name?.value, this.img64);
+
+      const subs = uploadTaskSnapshot.subscribe(snapshopt => {
+        if (snapshopt.progress == 0)
+           snapshopt.snapshot.task.then(k=>{
+            subs.unsubscribe();
+            this._snackBar.open(`Usuário ${this.name?.value} criado!`, 'ok', {
+              duration: 2000,
+            });
+            this.resetForm(formDirective);
+          })
         this.progressMode = 'determinate';
         this.progress = Number.parseInt(snapshopt.progress.toFixed(0));
         if (this.progress == 100) {
-          subs.unsubscribe();
-          this._snackBar.open(`Usuário ${this.name?.value} criado!`, 'ok', {
-            duration: 2000,
-          });
-          this.resetForm(formDirective);
+          this.progressMode = 'indeterminate';
         }
-      });
+      })
     }
   }
 
