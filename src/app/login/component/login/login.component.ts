@@ -64,9 +64,6 @@ export class LoginComponent implements OnInit {
 
   resetForm(formDirective: FormGroupDirective) {
 
-    this.form.reset();
-    this.form.markAsPristine();
-    this.form.markAsUntouched();
     this.img64 = '';
     this.submited = false
     this.changeAvatarStyle(this.imageUrl);
