@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Database, query, ref, set, remove, update, get, push, child, limitToLast, onValue, Query, DataSnapshot, QueryConstraint } from "@angular/fire/database";
+import { Database, query, ref, set, remove, update, get, push, child, limitToLast, onValue, Query, DataSnapshot, QueryConstraint, onChildChanged, onChildRemoved, onChildAdded } from "@angular/fire/database";
+
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -21,8 +22,8 @@ export class RealtimeService {
     return set(child(ref(this.db), path), data);
   }
 
-  get(path: string, limit: number) {
-    return get(query(ref(this.db, path), limitToLast(limit)))
+  get(path: string, ...queryConstraints: QueryConstraint[]) {
+    return get(query(ref(this.db, path),...queryConstraints))
   }
 
   update(path: string, data: any) {
@@ -31,6 +32,18 @@ export class RealtimeService {
 
   delete(path: string) {
     return remove(ref(this.db, path));
+  }
+
+  onChildAdded(q: Query, callback: (snapshot: DataSnapshot, previousChildName?: string | null) => unknown){
+    return onChildAdded(q, callback);
+  }
+
+  onChildChanged(q: Query, callback: (snapshot: DataSnapshot, previousChildName: string | null) => unknown) {
+    return onChildChanged(q, callback);
+  }
+
+  onChildRemoved(q: Query, callback: (snapshot: DataSnapshot) => unknown) {
+    return onChildRemoved(q, callback);
   }
 
   onValue(q: Query, callback: (snapshot: DataSnapshot) => unknown) {
