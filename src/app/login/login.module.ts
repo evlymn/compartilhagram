@@ -16,13 +16,15 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { CompareToDirective } from './directives/compare-to/compare-to.directive';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { ErrorMessageDialogComponent } from './component/login/error-message-dialog/error-message-dialog.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     ImageProfileDialogComponent,
-    CompareToDirective
+    CompareToDirective,
+    ErrorMessageDialogComponent
   ],
   imports: [
     CommonModule,

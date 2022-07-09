@@ -23,7 +23,7 @@ export class RealtimeService {
   }
 
   get(path: string, ...queryConstraints: QueryConstraint[]) {
-    return get(query(ref(this.db, path),...queryConstraints))
+    return get(query(ref(this.db, path), ...queryConstraints))
   }
 
   update(path: string, data: any) {
@@ -34,7 +34,7 @@ export class RealtimeService {
     return remove(ref(this.db, path));
   }
 
-  onChildAdded(q: Query, callback: (snapshot: DataSnapshot, previousChildName?: string | null) => unknown){
+  onChildAdded(q: Query, callback: (snapshot: DataSnapshot, previousChildName?: string | null) => unknown) {
     return onChildAdded(q, callback);
   }
 
@@ -46,14 +46,20 @@ export class RealtimeService {
     return onChildRemoved(q, callback);
   }
 
-  onValue(q: Query, callback: (snapshot: DataSnapshot) => unknown) {
-    return onValue(q, callback);
+  onValue(path: string, callback: (snapshot: DataSnapshot) => unknown, ...queryConstraints: QueryConstraint[]) {
+    return onValue(query(ref(this.db, path), ...queryConstraints), callback);
   }
 
-  onValueChanges(path: string, ...queryConstraints: QueryConstraint[]) {
-    return new Observable<DataSnapshot>(subscriber => {
+  onValueChanges(path: string, idField: string = 'id', ...queryConstraints: QueryConstraint[]) {
+    return new Observable<any[]>(subscriber => {
       onValue(query(ref(this.db, path), ...queryConstraints), snapshot => {
-        subscriber.next(snapshot);
+        const items = new Array<any>()
+        snapshot.forEach(childSnapshot => {
+          const newObj = childSnapshot.val()
+          newObj[idField] = childSnapshot.key;
+          items.push(newObj);
+        })
+        subscriber.next(items);
       });
     })
   }

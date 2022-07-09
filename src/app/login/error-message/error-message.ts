@@ -1,11 +1,11 @@
 import { ErrorMessageBase } from './error-mesage-base';
 
 export const ErrorMessage: ErrorMessageBase = {
-  'auth/email-already-in-use': 'Esse email já está em uso',
-  'auth/invalid-email': 'Esse email é inválido',
-  'auth/operation-not-allowed': 'Essa operação não é permitida',
-  'auth/weak-password': 'Senha deve ter no mínimo 6 caracteres',
-  'auth/user-disabled': 'Esse usúario esta desabilitado',
-  'auth/user-not-found': 'Usúario não encontrado',
-  'auth/wrong-password': 'Senha errada',
+  'auth/email-already-in-use': 'Hmmm, alguém já esta usando esse email por aqui!',
+  'auth/invalid-email': 'Errouuu!!! Tente novamente com um email válido!',
+  'auth/operation-not-allowed': 'Não estamos fazendo login com email hoje, volte amanhã!',
+  'auth/weak-password': 'Essa senha é muuiito fraquinha, digite pelo menos 6 caracteres',
+  'auth/user-disabled': 'Você está tentando logar, mas to vendo aqui que está desabilitado, estranho!',
+  'auth/user-not-found': 'Oops, não te encontrei na base, tem certeza que já fez cadastro?',
+  'auth/wrong-password': 'Eita! Senha errada, quer recuperá-la?',
 }

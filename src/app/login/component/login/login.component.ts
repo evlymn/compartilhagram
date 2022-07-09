@@ -7,6 +7,7 @@ import { LoginService } from '../../login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { ErrorMessage } from '../../error-message/error-message';
+import { ErrorMessageDialogComponent } from './error-message-dialog/error-message-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -125,7 +126,15 @@ export class LoginComponent implements OnInit {
       }
     } catch (error: any) {
       this.submited = false;
-      this._snackBar.open(`ocorreu um erro ${ErrorMessage[error.code]}`, 'ok');
+
+      const erroDialog = this.dialog.open(ErrorMessageDialogComponent, {
+        panelClass: 'ErrorMessageDialogComponent',
+        width: '350px',
+
+        data: ErrorMessage[error.code],
+      });
+
+     // this._snackBar.open(`ocorreu um erro ${ErrorMessage[error.code]}`, 'ok');
       if (!this.isSignUp)
         formDirective.resetForm();
     }

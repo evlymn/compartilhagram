@@ -16,6 +16,8 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModule } from './login/login.module';
+import { TimelineModule } from './timeline/timeline.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { LoginModule } from './login/login.module';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
     BrowserAnimationsModule,
-    LoginModule
+    LoginModule,
+    TimelineModule,
+    NgbModule
   ],
   providers: [
     ScreenTrackingService, UserTrackingService
