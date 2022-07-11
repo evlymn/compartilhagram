@@ -1,4 +1,18 @@
 <nav class="navbar fixed-top navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">  <img src="assets/images/compartilhagram-logo-yellow.svg" width="50%" title="Compartilhagram" alt="Compartilhagram logo">
-  </a>
+
+  <img src="assets/images/compartilhagram-logo-yellow.svg" [routerLink]="'/timeline'" width="50%"
+      title="Compartilhagram" alt="Compartilhagram logo">
+
+  <div class="actions">
+    <button mat-mini-fab  class="button-icon" (click)="chooseImage()"  aria-label="Example icon button with a home icon">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+    <button mat-mini-fab  class="button-icon"   aria-label="Example icon button with a home icon">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
 </nav>
+
+<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/x-png,image/gif,image/jpeg"
+  #file />
+

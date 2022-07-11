@@ -5,6 +5,7 @@ import {
   ActionCodeSettings,
   getAdditionalUserInfo,
   UserCredential,
+  UserInfo,
 
   // OAuthProvider,
   // linkWithPopup,
@@ -22,7 +23,7 @@ import { onIdTokenChanged } from '@firebase/auth';
 })
 export class AuthenticationService {
   private _route = '';
-
+  user!: User | null;
   userCredentials!: UserCredential;
 
   constructor(private auth: Auth, private router: Router,
@@ -42,9 +43,10 @@ export class AuthenticationService {
     return authState(this.auth);
   }
 
-  public get user() {
+  public get userAsync() {
     return user(this.auth);
   }
+
 
   onIdTokenChanged() {
     onIdTokenChanged(this.auth, async usr => {
@@ -55,9 +57,10 @@ export class AuthenticationService {
 
   private onAuthStateChanged() {
     onAuthStateChanged(this.auth, usr => {
+      this.user = usr;
       if (usr) {
         this.ngZone.run(() => {
-          this.router.navigate([this._route]).catch(reason => console.log(reason));
+          this.router.navigate(['/timeline']).catch(reason => console.log(reason));
         });
       } else {
         this.ngZone.run(() => {
@@ -72,7 +75,7 @@ export class AuthenticationService {
     return this.userCredentials;
   }
 
- async createUserWithEmailAndPassword(email: string, password: string) {
+  async createUserWithEmailAndPassword(email: string, password: string) {
     this.userCredentials = await createUserWithEmailAndPassword(this.auth, email, password);
     return this.userCredentials;
   }

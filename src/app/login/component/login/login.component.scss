@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-   overflow-x: auto;
+  overflow-x: auto;
 }
 mat-card {
   // height: 500px;
@@ -77,19 +77,19 @@ form {
     padding: 6px;
   }
   mat-dialog-actions {
-    height: 20px!important;
+    height: 20px !important;
   }
 }
 
 .error {
-color: chocolate;
+  color: chocolate;
 }
 
-small{
+small {
   color: rgb(242, 0, 0);
 }
 
-mat-progress-bar{
+mat-progress-bar {
   margin-top: 5px;
 }
 
@@ -97,11 +97,10 @@ mat-progress-bar{
   color: gray;
 }
 
-::ng-deep  .ErrorMessageDialogComponent {
+::ng-deep .ErrorMessageDialogComponent {
   mat-dialog-container {
     // background-color: rgb(255, 249, 161);
-    box-shadow:
-    rgb(255, 156, 85) 0px 0px 0px 3px !important;
+    box-shadow: rgb(255, 156, 85) 0px 0px 0px 3px !important;
   }
-//rgb(255, 156, 85) 0px 0px 0px 6px, rgb(255, 85, 85) 0px 0px 0px 7.5px,
+  //rgb(255, 156, 85) 0px 0px 0px 6px, rgb(255, 85, 85) 0px 0px 0px 7.5px,
 }

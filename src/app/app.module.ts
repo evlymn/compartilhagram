@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModule } from './login/login.module';
 import { TimelineModule } from './timeline/timeline.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { registerLocaleData } from '@angular/common';
+import localePT from '@angular/common/locales/pt';
+import localeExtraPT from '@angular/common/locales/extra/pt';
+registerLocaleData(localePT, 'pt', localeExtraPT);
+
 
 @NgModule({
   declarations: [
@@ -48,8 +53,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService
+    ScreenTrackingService, UserTrackingService, {
+      provide: LOCALE_ID,
+      useValue: 'pt'
+    }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

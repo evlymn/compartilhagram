@@ -1,0 +1,29 @@
+<section class="component bg-dark">
+  <section>
+    <app-header></app-header>
+
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title class="title">O que vamos compartilhar?</mat-card-title>
+      </mat-card-header>
+      <img mat-card-image [src]="imageUrl" width="100%" alt="Photo of a Shiba Inu">
+
+      <mat-progress-bar [mode]="progressMode" [value]="progress" color="accent" [style]=" send ? 'opacity:1' :  'opacity:0'">
+      </mat-progress-bar>
+
+
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <textarea [(ngModel)]="postText" cdkTextareaAutosize matInput></textarea>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions>
+        <button [routerLink]="'/timeline'"   mat-raised-button>Cancelar</button>
+        <button mat-raised-button color="accent" (click)="savePost()">On the line!!</button>
+      </mat-card-actions>
+
+    </mat-card>
+
+    <span></span>
+  </section>
+</section>

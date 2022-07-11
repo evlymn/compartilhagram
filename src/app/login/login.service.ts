@@ -42,7 +42,7 @@ export class LoginService {
         dateTime: new Date().getTime(),
         provider: credentials.providerId,
       });
-      this.router.navigate(['profile']);
+      this.router.navigate(['timeline']);
     });
 
     return this.storage.percentage(updloadTask)

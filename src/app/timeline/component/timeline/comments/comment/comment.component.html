@@ -1,0 +1,11 @@
+<section class="component">
+  <img [src]="comment?.photoURL" alt="">
+  <div>
+    <h4>{{comment?.displayName}}</h4>
+    <label>{{comment?.comment}}</label>
+  </div>
+
+  <mat-icon (click)="favorite()" [class]="totalFavByUser == 0 ? iconClass : ''">favorite</mat-icon><sup
+  [style]="totalFav>0 ? 'opacity:1' :  'opacity:0'">{{totalFav}}</sup>
+
+</section>

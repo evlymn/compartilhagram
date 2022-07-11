@@ -1,4 +1,6 @@
 .card {
+  width: 100%;
+  min-width: 350px;
   margin-bottom: 10px;
   margin-top: 10px;
   background-color: rgb(49, 49, 49);
@@ -6,10 +8,44 @@
 }
 
 mat-card-title {
-font-size: 17px!important;
+  font-size: 17px !important;
 }
 mat-card-subtitle {
   color: rgb(111, 111, 111);
-  font-size: 12px!important;
+  font-size: 12px !important;
+}
 
+mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+// mat-menu-content
+.mat-menu-content {
+  background-color: #2d2d2d !important;
+  color: wheat !important;
+  padding: 0px !important;
+}
+
+::ng-deep .mat-menu-item {
+  // background-color: black!important;
+  color: wheat !important;
+}
+
+::ng-deep .mat-menu-panel {
+  background-color: #2d2d2d !important;
+  height: 20px !important;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+sup{
+  color: rgba(220, 220, 220, 0.656);
 }

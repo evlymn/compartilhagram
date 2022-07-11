@@ -1,8 +1,16 @@
 .component {
+  width: 100%;
+  min-width: 100%;
   height: auto;
   overflow-x: auto;
   margin-top: 50px;
   margin-bottom: 80px;
-  // background-color: rgb(49, 49, 49);
+  //  background-color: rgb(49, 49, 49);
   color: whitesmoke;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
+
+
 }

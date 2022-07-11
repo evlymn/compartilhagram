@@ -1,0 +1,72 @@
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgb(109, 109, 109) !important;
+  padding-top: 1px !important;
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-infix {
+  padding-top: 1px !important;
+}
+
+::ng-deep .mat-input-element {
+  color: #f7ba00 !important;
+}
+
+::ng-deep .mat-focus-indicator {
+  // padding: 3px!important;
+  margin: 5px;
+}
+
+.component {
+  margin-top: 50px;
+  background-color: #22252a;
+  width: 100%;
+}
+
+.post {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  // background-color: transparent;
+  flex-grow: 1 auto 1;
+  margin: 10px;
+  // margin-bottom: 20px;
+
+  color: whitesmoke;
+  border-radius: 5px;
+}
+
+.avatar {
+  width: 50px;
+  border-radius: 25px;
+  margin: 5px;
+}
+.post > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  margin: 5px;
+}
+
+.image {
+  width: 50px;
+  border-radius: 0px;
+  margin: 5px;
+}
+
+
+small {
+  color: rgb(157, 157, 157);
+}
+
+.date-time {
+  display: flex;
+  justify-content: flex-end;
+}
+
+h4 {
+  margin-bottom: 5px;
+  font-weight: 900;
+}

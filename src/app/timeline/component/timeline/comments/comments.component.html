@@ -1,0 +1,19 @@
+<app-header></app-header>
+<section class="component">
+
+  <section class="post">
+    <img class="avatar" [src]="post?.photoURL" alt="">
+    <div>
+      <h4>{{post?.displayName}}</h4>
+      <label>{{post?.postText}}</label>
+      <div class="date-time">
+        <small>{{post?.dateTime | date:'dd MMMM HH:mm'  }}</small>
+      </div>
+    </div>
+
+    <img class="image" [src]="post?.imageURL" alt="">
+  </section>
+
+  <app-comment *ngFor="let item of comments| async" [comment]="item"></app-comment>
+  <app-footer></app-footer>
+</section>

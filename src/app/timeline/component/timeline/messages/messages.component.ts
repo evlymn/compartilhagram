@@ -14,9 +14,6 @@ export class MessagesComponent implements OnInit {
   items: any;
   getMessages() {
     this.items = this.service.getMessagesAsync();
-    this.service.getMessagesAsync().subscribe(d => {
-      console.log(d);
-    })
   }
 
   getTimeline() {

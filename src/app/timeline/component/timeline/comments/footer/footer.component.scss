@@ -1,0 +1,19 @@
+nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: nowrap;
+  background-color: rgba(0, 0, 0, 0.185);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+button {
+  color: #f7ba00;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0px;
+  width: 100%!important;
+}
+
