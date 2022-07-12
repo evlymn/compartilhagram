@@ -1,3 +1,8 @@
 <section class="component">
-  <app-message *ngFor="let item of items| async" [message]="item"> </app-message>
+  <div style="position:relative ;" *ngFor="let item of items| async">
+    <div style="position:absolute ; top: -40px" id="{{item.id}}"></div>
+
+    <app-message [message]="item"> </app-message>
+
+  </div>
 </section>

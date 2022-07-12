@@ -21,14 +21,20 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { registerLocaleData } from '@angular/common';
 import localePT from '@angular/common/locales/pt';
 import localeExtraPT from '@angular/common/locales/extra/pt';
-registerLocaleData(localePT, 'pt', localeExtraPT);
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { HeaderModule } from './header/header.module';
+import { ProfileModule } from './profile/profile.module';
+ registerLocaleData(localePT, 'pt', localeExtraPT);
 
 
 @NgModule({
   declarations: [
-    AppComponent
-  ],
+    AppComponent,
+   ],
   imports: [
+    MatIconModule,
+    MatMenuModule,
     BrowserModule,
     AppRoutingModule,
     provideFirebaseApp(() => {
@@ -50,7 +56,8 @@ registerLocaleData(localePT, 'pt', localeExtraPT);
     BrowserAnimationsModule,
     LoginModule,
     TimelineModule,
-    NgbModule
+    NgbModule,
+    ProfileModule
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, {

@@ -11,6 +11,7 @@ export class CommentsComponent implements OnInit {
   comments: any;
   id = '';
   post: any;
+
   constructor(private _service: TimelineService, private _route: ActivatedRoute) {
     this.id = this._route.snapshot.paramMap.get('id') as string;
     this.getComments();

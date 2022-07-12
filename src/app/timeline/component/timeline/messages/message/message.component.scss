@@ -22,21 +22,27 @@ mat-card-actions {
   align-items: center;
 }
 
-// mat-menu-content
-.mat-menu-content {
+::ng-deep .mat-menu-content {
   background-color: #2d2d2d !important;
   color: wheat !important;
-  padding: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+::ng-deep .mat-menu-content > button {
+  margin: 0px !important;
 }
 
 ::ng-deep .mat-menu-item {
-  // background-color: black!important;
   color: wheat !important;
 }
 
 ::ng-deep .mat-menu-panel {
   background-color: #2d2d2d !important;
-  height: 20px !important;
+  // height: 20px !important;
+  min-width: auto !important;
+  // height: 20px !important;
+  // min-height: 51px !important;
 }
 
 .header {
@@ -46,6 +52,41 @@ mat-card-actions {
   justify-content: space-between;
 }
 
-sup{
+sup {
   color: rgba(220, 220, 220, 0.656);
+  margin: 3px;
+}
+mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgb(109, 109, 109)!important;
+}
+
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.buttons-actions {
+  display: flex;
+  justify-content:center;
+}
+
+.buttons-actions > button {
+  margin-right: 3px;
+  margin-left: 3px;
+}
+button{
+  border-color: rgba(220, 220, 220, 0.243)!important;
+}
+::ng-deep .mat-form-field-infix {
+  padding-top: 2px!important;
+}
+
+:ng-deep .mat-form-field-wrapper {
+  padding-bottom: 10px;
 }

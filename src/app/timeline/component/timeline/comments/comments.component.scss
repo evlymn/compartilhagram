@@ -21,6 +21,7 @@
   margin-top: 50px;
   background-color: #22252a;
   width: 100%;
+  border: transparent;
 }
 
 .post {
@@ -30,7 +31,7 @@
   align-items: center;
   // background-color: transparent;
   flex-grow: 1 auto 1;
-  margin: 10px;
+  padding: 10px;
   // margin-bottom: 20px;
 
   color: whitesmoke;

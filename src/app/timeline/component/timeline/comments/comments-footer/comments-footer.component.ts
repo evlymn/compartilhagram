@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TimelineService } from '../../../../timeline.service';
-
 @Component({
-  selector: 'app-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  selector: 'app-comments-footer',
+  templateUrl: './comments-footer.component.html',
+  styleUrls: ['./comments-footer.component.scss']
 })
-export class FooterComponent implements OnInit {
+export class CommentsFooterComponent implements OnInit {
+
   commentText = '';
   id = '';
   constructor(private _route: ActivatedRoute, private _service: TimelineService) {
@@ -16,7 +16,9 @@ export class FooterComponent implements OnInit {
 
 
   saveComent() {
-    this._service.createComment(this.id, this.commentText);
+    this._service.createComment(this.id, this.commentText).then(_ => {
+      this.commentText = '';
+    });
   }
 
 

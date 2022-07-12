@@ -1,4 +1,4 @@
-<section class="component bg-dark">
+<div class="component bg-dark">
   <section>
     <app-header></app-header>
 
@@ -6,7 +6,7 @@
       <mat-card-header>
         <mat-card-title class="title">O que vamos compartilhar?</mat-card-title>
       </mat-card-header>
-      <img mat-card-image [src]="imageUrl" width="100%" alt="Photo of a Shiba Inu">
+      <img mat-card-image [src]="imageUrl" width="100%" alt="">
 
       <mat-progress-bar [mode]="progressMode" [value]="progress" color="accent" [style]=" send ? 'opacity:1' :  'opacity:0'">
       </mat-progress-bar>
@@ -24,6 +24,7 @@
 
     </mat-card>
 
-    <span></span>
+
   </section>
-</section>
+</div>
+<!-- <app-footer></app-footer> -->

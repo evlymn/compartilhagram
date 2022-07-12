@@ -1,16 +1,16 @@
  <mat-card class="card" [style]="width">
    <div class="header">
      <mat-card-header>
-       <div mat-card-avatar class="avatar" matRipple
+       <div mat-card-avatar class="avatar" [routerLink]="'/profile/' + message.uid" matRipple
          style=" background-image: url('{{message.photoURL}}'); background-size: cover;">
        </div>
-       <mat-card-title>{{message.displayName}}</mat-card-title>
+       <mat-card-title [routerLink]="'/profile/' + message.uid" matRipple>{{message.displayName}}</mat-card-title>
        <mat-card-subtitle>{{message.dateTime | date:'dd/MM/yyyy HH:mm'}}</mat-card-subtitle>
      </mat-card-header>
-
      <mat-icon *ngIf="message.uid ==  currentUid" [matMenuTriggerFor]="menu" matRipple
        class="material-symbols-outlined">more_vert</mat-icon>
      <mat-menu #menu="matMenu">
+       <button mat-menu-item (click)="edit()">editar</button>
        <button mat-menu-item (click)="delete(message.id)">deletar</button>
      </mat-menu>
    </div>
@@ -18,18 +18,27 @@
      <img mat-card-image [src]="message.imageURL" alt="" (click)="doubleClick(message.id)">
    </div>
    <mat-divider></mat-divider>
-   <mat-card-content *ngIf="message.postText">
-     <p>
+   <mat-card-content>
+     <mat-form-field *ngIf="editing" appearance="outline">
+       <textarea [(ngModel)]="message.postText" cdkTextareaAutosize matInput></textarea>
+     </mat-form-field>
+     <div class="buttons-actions" *ngIf="editing">
+       <button (click)="edit()" mat-stroked-button>Cancelar</button>
+       <button mat-stroked-button color="accent" (click)="savePost()">On the line again!!</button>
+     </div>
+     <p *ngIf="message.postText && !editing">
        {{message.postText}}
      </p>
    </mat-card-content>
    <mat-card-actions>
-     <div> <button mat-icon-button color="warn">
+     <div>
+      <button mat-icon-button color="warn">
          <mat-icon [class]=" totalFavByUser == 0 ? iconClass : ''" (click)="favorite(message.id)">favorite</mat-icon>
          <sup [style]="totalFav>0 ? 'opacity:1' :  'opacity:0'">{{totalFav}}</sup>
        </button>
        <button mat-button>
-         <mat-icon [routerLink]="'/comments/' + message.id" class="material-symbols-outlined">chat_bubble</mat-icon>
+         <mat-icon [routerLink]="'/comments/' + message.id" [class]=" totalComments == 0 ? iconClass : ''" >chat_bubble</mat-icon>
+         <sup [style]="totalComments>0 ? 'opacity:1' :  'opacity:0'">{{totalComments}}</sup>
        </button>
      </div>
    </mat-card-actions>

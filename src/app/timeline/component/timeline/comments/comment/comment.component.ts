@@ -11,25 +11,29 @@ export class CommentComponent implements OnInit {
   @Input() comment!: any;
   iconClass = 'material-symbols-outlined';
   totalFav = 0;
-  id = '';
+  postId = '';
   totalFavByUser = 0;
   constructor(private _service: TimelineService, private _route: ActivatedRoute) {
-    this.id = this._route.snapshot.paramMap.get('id') as string;
+    this.postId = this._route.snapshot.paramMap.get('id') as string;
   }
 
+  delete() {
+    console.log(this.postId, this.comment.id)
+    this._service.deleteComment(this.postId, this.comment.id);
+  }
   favorite() {
-    this._service.setCommentFavorite(this.id, this.comment.id).then(_ => {
+    this._service.setCommentFavorite(this.postId, this.comment.id).then(_ => {
       this.getTotalFavoritesByuser();
       this.getTotalFavorites();
     });
   }
 
   async getTotalFavoritesByuser() {
-    this.totalFavByUser = await this._service.getTotalCommentFavoritesByUser(this.id, this.comment.id);
+    this.totalFavByUser = await this._service.getTotalCommentFavoritesByUser(this.postId, this.comment.id);
   }
 
   async getTotalFavorites() {
-    this.totalFav = await this._service.getTotalCommentFavorites(this.id, this.comment.id);
+    this.totalFav = await this._service.getTotalCommentFavorites(this.postId, this.comment.id);
   }
   ngOnInit(): void {
     this.getTotalFavoritesByuser();

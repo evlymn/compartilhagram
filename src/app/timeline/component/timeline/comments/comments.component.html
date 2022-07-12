@@ -1,4 +1,5 @@
 <app-header></app-header>
+
 <section class="component">
 
   <section class="post">
@@ -15,5 +16,6 @@
   </section>
 
   <app-comment *ngFor="let item of comments| async" [comment]="item"></app-comment>
-  <app-footer></app-footer>
+  <!-- <app-footer></app-footer> -->
+  <app-comments-footer></app-comments-footer>
 </section>

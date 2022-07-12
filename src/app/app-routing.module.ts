@@ -8,14 +8,15 @@ import { CommentsComponent } from './timeline/component/timeline/comments/commen
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:id', component: ProfileComponent },
   { path: 'timeline', component: TimelineComponent },
+  { path: 'timeline/:id', component: TimelineComponent },
   { path: 'post', component: PostComponent },
   { path: 'comments/:id', component: CommentsComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {anchorScrolling: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

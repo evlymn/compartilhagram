@@ -2,8 +2,8 @@
   <mat-card>
     <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="!submited ? submit(formDirective): null">
       <mat-card-title>
-        <img src="assets/images/compartilhagram-logo-black.svg" width="100%" title="Compartilhagram" alt="Compartilhagram logo">
-        <mat-card-subtitle>Suas fotos On The Line!</mat-card-subtitle>
+        <img src="assets/images/compartilhagram-logo-yellow-angle.svg" width="100%" title="Compartilhagram" alt="Compartilhagram logo">
+        <mat-card-subtitle>Sua vida On The Line!</mat-card-subtitle>
 
       </mat-card-title>
       <div class="avatar" (click)="file.click()" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple

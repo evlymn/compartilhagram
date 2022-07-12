@@ -17,6 +17,9 @@ export class TimelineService {
     public auth: AuthenticationService) { }
 
 
+
+
+
   async getPost(id: string): Promise<any> {
     const post = await this._realtime.get(`timeline/${id}`);
     if (post.exists())
@@ -30,6 +33,8 @@ export class TimelineService {
   getComments(id: string) {
     return this._realtime.onValueChanges('comments/' + id);
   }
+
+
   async fileToBase64(file: File) {
     return this._storage.fileToBase64(file);
   }
@@ -37,9 +42,7 @@ export class TimelineService {
     return this._realtime.onValueChanges('timeline');
   }
 
-  deletePost(id: string) {
-    this._realtime.delete('timeline/' + id);
-  }
+
 
   async setFavorite(id: string) {
     const snapshot = await this._realtime.get(`messages/favorites/${id}/${this.auth.user?.uid}`);
@@ -49,8 +52,6 @@ export class TimelineService {
       return this.removeFavorite(id);
     }
   }
-
-
 
   async createFavorite(id: string) {
     return this._realtime.set(`messages/favorites/${id}/${this.auth.user?.uid}`, {
@@ -72,7 +73,6 @@ export class TimelineService {
     return total.size;
   }
 
-
   async setCommentFavorite(postId: string, commentId: string) {
     const snapshot = await this._realtime.get(`comments/favorites/${postId}/${commentId}/${this.auth.user?.uid}`);
     if (!snapshot.exists()) {
@@ -92,7 +92,6 @@ export class TimelineService {
     return this._realtime.delete(`comments/favorites/${postId}/${commentId}/${this.auth.user?.uid}`);
   }
 
-
   async getTotalCommentFavorites(postId: string, commentId: string) {
     const total = await this._realtime.get(`comments/favorites/${postId}/${commentId}/`);
     return total.size;
@@ -103,10 +102,8 @@ export class TimelineService {
     return total.size;
   }
 
-
-
   createComment(id: string, comment: string) {
-    this._realtime.add('comments/' + id, {
+    return this._realtime.add('comments/' + id, {
       comment,
       time: new Date().valueOf(),
       displayName: this.auth.user?.displayName,
@@ -114,6 +111,23 @@ export class TimelineService {
       uid: this.auth.user?.uid,
       photoURL: this.auth.user?.photoURL,
     })
+  }
+
+  deleteComment(postId: string, commentId: string) {
+    this._realtime.delete(`comments/${postId}/${commentId}/`);
+  }
+
+  async getTotalComments(id: string) {
+    const total = await this._realtime.get(`comments/${id}`);
+    return total.size;
+  }
+
+  getPostsByUser(id: string) {
+    return this._realtime.onValueChanges('timeline_by_user/' + id);
+  }
+
+  async editPost(id: string, data: any) {
+    return this._realtime.update('timeline/' + id, data);
   }
 
   savePost(file: File, postText: string) {
@@ -145,4 +159,9 @@ export class TimelineService {
     })
     return this._storage.percentage(updloadTask)
   }
+
+  deletePost(id: string) {
+    this._realtime.delete('timeline/' + id);
+  }
+
 }

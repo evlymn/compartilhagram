@@ -15,14 +15,14 @@ export class MessageComponent implements OnInit {
   resizeSubscription2!: Subscription
   width = 'width:' + window.innerWidth + ' %';
   iconClass = 'material-symbols-outlined';
-  totalFavByUser = 0;
+   totalFavByUser = 0;
   totalFav = 0;
   currentUid = '';
+  totalComments = 0;
+  editing = false;
   constructor(private _service: TimelineService) {
-    this.currentUid =   this._service.auth.user?.uid as string;
-  //   console.log(this._service.auth.user)
+    this.currentUid = this._service.auth.user?.uid as string;
   }
-
 
   getTotalFavoritesByUser() {
     this._service.getTotalFavoritesByUser(this.message.id).then(t => {
@@ -35,9 +35,27 @@ export class MessageComponent implements OnInit {
       this.totalFav = t;
     });
   }
+  savePost() {
+    this._service.editPost(this.message.id, this.message).then(_=>{
+      this.editing = false;
+    })
+  }
+
+
+
+  getTotalComments() {
+    this._service.getTotalComments(this.message.id).then(t => {
+      this.totalComments = t;
+    });
+  }
 
   delete(id: string) {
     this._service.deletePost(id);
+  }
+
+  edit() {
+
+    this.editing = !this.editing;
   }
   touchtime = 0;
   doubleClick(id: string) {
@@ -60,6 +78,7 @@ export class MessageComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.getTotalComments();
     this.getTotalFavoritesByUser();
     this.getTotalFavorites();
     this.resizeObservable = fromEvent(window, 'resize')

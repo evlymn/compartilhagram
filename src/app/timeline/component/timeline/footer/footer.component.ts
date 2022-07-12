@@ -3,12 +3,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TimelineService } from '../../../timeline.service';
 
+
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: 'app-footer',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class FooterComponent implements OnInit {
+
   @ViewChild('file') file!: ElementRef;
   constructor(private _service: TimelineService,
     private _router: Router,
@@ -44,4 +46,5 @@ export class HeaderComponent implements OnInit {
   }
   ngOnInit(): void {
   }
+
 }

@@ -4,6 +4,8 @@
   justify-content: center;
   flex-direction: row;
   color: whitesmoke;
+  overflow-x: auto;
+  padding-bottom: 50px;
 }
 
 .component > section {
@@ -59,4 +61,8 @@ mat-form-field {
 mat-card-actions {
   display: flex;
   justify-content: space-around;
+}
+
+button {
+  width: 100%;
 }
