@@ -17,14 +17,20 @@
   margin: 5px;
 }
 
-.component {
+.comments-component {
   margin-top: 50px;
   background-color: #22252a;
   width: 100%;
   border: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
 }
 
 .post {
+  max-width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -70,4 +76,10 @@ small {
 h4 {
   margin-bottom: 5px;
   font-weight: 900;
+}
+
+app-comment {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
