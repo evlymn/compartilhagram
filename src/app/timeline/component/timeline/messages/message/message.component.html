@@ -11,11 +11,11 @@
        class="material-symbols-outlined">more_vert</mat-icon>
      <mat-menu #menu="matMenu">
        <button mat-menu-item (click)="edit()">editar</button>
-       <button mat-menu-item (click)="delete(message.id)">deletar</button>
+       <button mat-menu-item (click)="delete()">deletar</button>
      </mat-menu>
    </div>
    <div matRipple [matRippleCentered]="true" style="margin:0px ; padding:0px">
-     <img mat-card-image [src]="message.imageURL" alt="" (click)="doubleClick(message.id)">
+     <img mat-card-image [src]="message.imageURL"  alt="" (click)="doubleClick(message.id)">
    </div>
    <mat-divider></mat-divider>
    <mat-card-content>

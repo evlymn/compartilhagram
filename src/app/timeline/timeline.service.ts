@@ -21,17 +21,17 @@ export class TimelineService {
 
 
   async getPost(id: string): Promise<any> {
-    const post = await this._realtime.get(`timeline/${id}`);
+    const post = await this._realtime.get(`timeline/messages/${id}`);
     if (post.exists())
       return post.val()
   }
 
   getMessages(callback: (snapshot: DataSnapshot) => unknown, ...queryConstraints: QueryConstraint[]) {
-    return this._realtime.onValue('timeline', callback, ...queryConstraints)
+    return this._realtime.onValue('timeline/messages/', callback, ...queryConstraints)
   }
 
   getComments(id: string) {
-    return this._realtime.onValueChanges('comments/' + id);
+    return this._realtime.onValueChanges('timeline/comments/' + id);
   }
 
 
@@ -39,13 +39,13 @@ export class TimelineService {
     return this._storage.fileToBase64(file);
   }
   getMessagesAsync() {
-    return this._realtime.onValueChanges('timeline');
+    return this._realtime.onValueChanges('timeline/messages/');
   }
 
 
 
   async setFavorite(id: string) {
-    const snapshot = await this._realtime.get(`messages/favorites/${id}/${this.auth.user?.uid}`);
+    const snapshot = await this._realtime.get(`timeline/favorites/messages/${id}/${this.auth.user?.uid}`);
     if (!snapshot.exists()) {
       return this.createFavorite(id);
     } else {
@@ -54,27 +54,27 @@ export class TimelineService {
   }
 
   async createFavorite(id: string) {
-    return this._realtime.set(`messages/favorites/${id}/${this.auth.user?.uid}`, {
+    return this._realtime.set(`timeline/favorites/messages/${id}/${this.auth.user?.uid}`, {
       uid: this.auth.user?.uid, displayName: this.auth.user?.displayName, time: new Date().valueOf()
     })
   }
 
   async removeFavorite(id: string) {
-    return this._realtime.delete(`messages/favorites/${id}/${this.auth.user?.uid}`);
+    return this._realtime.delete(`timeline/favorites/messages/${id}/${this.auth.user?.uid}`);
   }
 
   async getTotalFavorites(id: string) {
-    const total = await this._realtime.get(`messages/favorites/${id}`);
+    const total = await this._realtime.get(`timeline/favorites/messages/${id}`);
     return total.size;
   }
 
   async getTotalFavoritesByUser(id: string) {
-    const total = await this._realtime.get(`messages/favorites/${id}/${this.auth.user?.uid}`);
+    const total = await this._realtime.get(`timeline/favorites/messages/${id}/${this.auth.user?.uid}`);
     return total.size;
   }
 
   async setCommentFavorite(postId: string, commentId: string) {
-    const snapshot = await this._realtime.get(`comments/favorites/${postId}/${commentId}/${this.auth.user?.uid}`);
+    const snapshot = await this._realtime.get(`timeline/favorites/comments/${postId}/${commentId}/${this.auth.user?.uid}`);
     if (!snapshot.exists()) {
       return this.createFavoriteComment(postId, commentId)
     } else {
@@ -83,27 +83,27 @@ export class TimelineService {
   }
 
   async createFavoriteComment(postId: string, commentId: string) {
-    return this._realtime.set(`comments/favorites/${postId}/${commentId}/${this.auth.user?.uid}`, {
+    return this._realtime.set(`timeline/favorites/comments/${postId}/${commentId}/${this.auth.user?.uid}`, {
       uid: this.auth.user?.uid, displayName: this.auth.user?.displayName, time: new Date().valueOf()
     })
   }
 
   async removeCommentFavorite(postId: string, commentId: string) {
-    return this._realtime.delete(`comments/favorites/${postId}/${commentId}/${this.auth.user?.uid}`);
+    return this._realtime.delete(`timeline/favorites/comments/${postId}/${commentId}/${this.auth.user?.uid}`);
   }
 
   async getTotalCommentFavorites(postId: string, commentId: string) {
-    const total = await this._realtime.get(`comments/favorites/${postId}/${commentId}/`);
+    const total = await this._realtime.get(`timeline/favorites/comments/${postId}/${commentId}/`);
     return total.size;
   }
 
   async getTotalCommentFavoritesByUser(postId: string, commentId: string) {
-    const total = await this._realtime.get(`comments/favorites/${postId}/${commentId}/${this.auth.user?.uid}`);
+    const total = await this._realtime.get(`timeline/favorites/comments/${postId}/${commentId}/${this.auth.user?.uid}`);
     return total.size;
   }
 
   createComment(id: string, comment: string) {
-    return this._realtime.add('comments/' + id, {
+    return this._realtime.add('timeline/comments/' + id, {
       comment,
       time: new Date().valueOf(),
       displayName: this.auth.user?.displayName,
@@ -114,28 +114,40 @@ export class TimelineService {
   }
 
   deleteComment(postId: string, commentId: string) {
-    this._realtime.delete(`comments/${postId}/${commentId}/`);
+    this._realtime.delete(`timeline/comments/${postId}/${commentId}/`);
   }
 
   async getTotalComments(id: string) {
-    const total = await this._realtime.get(`comments/${id}`);
+    const total = await this._realtime.get(`timeline/comments/${id}`);
     return total.size;
   }
 
   getPostsByUser(id: string) {
-    return this._realtime.onValueChanges('timeline_by_user/' + id);
+    return this._realtime.onValueChanges('timeline/messages_by_user/' + id);
   }
 
   async editPost(id: string, data: any) {
-    return this._realtime.update('timeline/' + id, data);
+    return this._realtime.update('timeline/messages/' + id, data);
   }
 
-  savePost(file: File, postText: string) {
+  async savePost(file: File, postText: string) {
     const uid = this.auth.user?.uid;
     const displayName = this.auth.user?.displayName;
-    const storageFileName = new Date().getTime() + '_' + file.name;
     const id = this._realtime.createId();
-    const updloadTask = this._storage.uploadBytesResumable(`imagens/user/timeline/${uid}/${storageFileName}`, file,
+    const local = `timeline/${uid}/${id}`;
+    const objectName = `${local}/${file.name}`;
+    const objectId = `compartilhagram-com.appspot.com/${objectName}`
+    await this._realtime.set('timeline/messages/' + id, {
+      uid: uid,
+      displayName: displayName!,
+      photoURL: this.auth.user?.photoURL,
+      objectName,
+      objectId,
+      postText: postText,
+      dateTime: new Date().getTime()
+    });
+
+    const updloadTask = this._storage.uploadBytesResumable(objectName, file,
       {
         cacheControl: 'public, max-age=31536000', customMetadata: {
           uid: uid!,
@@ -145,18 +157,14 @@ export class TimelineService {
         }
       }
     )
-
-    updloadTask.then(async snapshot => {
+    updloadTask.then(async (snapshot: { ref: { fullPath: string; }; }) => {
       const url = await this._storage.getDownloadURL(snapshot.ref.fullPath);
-      this._realtime.set('timeline/' + id, {
-        uid: uid,
-        displayName: displayName!,
-        photoURL: this.auth.user?.photoURL,
+      this._realtime.update('timeline/' + id, {
         imageURL: url,
-        postText: postText,
-        dateTime: new Date().getTime()
       });
     })
+
+
     return this._storage.percentage(updloadTask)
   }
 

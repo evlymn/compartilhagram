@@ -1,7 +1,8 @@
+<section>
 <nav class="navbar fixed-top navbar-dark bg-dark">
    <div class="title">
     <mat-icon [routerLink]="'/timeline'" *ngIf="isNotTimeline" color="accent">chevron_left</mat-icon>
-     <img src="assets/images/compartilhagram-logo-yellow.svg" [routerLink]="'/timeline'" width="60%"
+     <img src="assets/images/compartilhagram-logo-yellow.svg" [routerLink]="'/timeline'" class="logo"
       title="Compartilhagram" alt="Compartilhagram logo">
   </div>
   <div class="actions">
@@ -17,3 +18,4 @@
 
 <input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/x-png,image/gif,image/jpeg"
   #file />
+</section>

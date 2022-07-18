@@ -2,7 +2,7 @@
   <div style="position:relative ;" *ngFor="let item of items| async">
     <div style="position:absolute ; top: -40px" id="{{item.id}}"></div>
 
-    <app-message [message]="item"> </app-message>
+    <app-message *ngIf="item.objectName" [message]="item"> </app-message>
 
   </div>
 </section>

@@ -90,3 +90,8 @@ button{
 :ng-deep .mat-form-field-wrapper {
   padding-bottom: 10px;
 }
+
+
+::ng-deep .snackBar {
+  color: whitesmoke;
+}

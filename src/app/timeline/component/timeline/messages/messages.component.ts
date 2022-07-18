@@ -35,9 +35,7 @@ export class MessagesComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked(): void {
     try {
         if(this.fragment) {
-
               document.querySelector('#' + this.fragment)?.scrollIntoView({behavior: "smooth"});
-             // document?.querySelector('#' + this.fragment).scrollIntoView();
         }
     } catch (e) { }
   }

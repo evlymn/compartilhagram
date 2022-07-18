@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { TimelineService } from '../../../../timeline.service';
+import { MessageDeleteComponent } from '../message-delete/message-delete.component';
 
 @Component({
   selector: 'app-message',
@@ -15,12 +17,14 @@ export class MessageComponent implements OnInit {
   resizeSubscription2!: Subscription
   width = 'width:' + window.innerWidth + ' %';
   iconClass = 'material-symbols-outlined';
-   totalFavByUser = 0;
+  totalFavByUser = 0;
   totalFav = 0;
   currentUid = '';
   totalComments = 0;
   editing = false;
-  constructor(private _service: TimelineService) {
+  touchtime = 0;
+
+  constructor(private _service: TimelineService, private _snackBar: MatSnackBar) {
     this.currentUid = this._service.auth.user?.uid as string;
   }
 
@@ -35,13 +39,12 @@ export class MessageComponent implements OnInit {
       this.totalFav = t;
     });
   }
+
   savePost() {
-    this._service.editPost(this.message.id, this.message).then(_=>{
+    this._service.editPost(this.message.id, this.message).then(_ => {
       this.editing = false;
     })
   }
-
-
 
   getTotalComments() {
     this._service.getTotalComments(this.message.id).then(t => {
@@ -49,15 +52,25 @@ export class MessageComponent implements OnInit {
     });
   }
 
-  delete(id: string) {
-    this._service.deletePost(id);
+  delete() {
+
+    const d = this._snackBar.openFromComponent(MessageDeleteComponent, {
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: 'snackBar'
+    })
+
+    d.afterDismissed().subscribe(dismiss => {
+      if (dismiss.dismissedByAction) {
+        this._service.deletePost(this.message.id);
+      }
+    })
   }
 
   edit() {
-
     this.editing = !this.editing;
   }
-  touchtime = 0;
+
   doubleClick(id: string) {
     if (this.touchtime === 0) {
       this.touchtime = new Date().getTime();
@@ -77,6 +90,7 @@ export class MessageComponent implements OnInit {
       this.getTotalFavorites();
     });
   }
+
   ngOnInit(): void {
     this.getTotalComments();
     this.getTotalFavoritesByUser();
@@ -86,7 +100,5 @@ export class MessageComponent implements OnInit {
       this.width = 'width:' + evt.target?.innerWidth;
       console.log('event: ', evt.target?.innerWidth)
     })
-
-
   }
 }

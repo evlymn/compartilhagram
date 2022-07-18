@@ -1,5 +1,13 @@
-.navbar {
+section {
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.navbar {
+  // width: 100%;
+
+
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -68,4 +76,7 @@
 //   font-size: 17px;
 // }
 
-
+.logo{
+  max-height: 30px !important;
+ // height: 42.688 !important;
+}

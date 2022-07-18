@@ -41,6 +41,7 @@ export class LoginService {
         photoURL: url,
         dateTime: new Date().getTime(),
         provider: credentials.providerId,
+        uid: credentials.user.uid
       });
       this.router.navigate(['timeline']);
     });

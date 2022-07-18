@@ -26,6 +26,7 @@ import { CommentsFooterComponent } from './component/timeline/comments/comments-
 import { FooterComponent } from './component/timeline/footer/footer.component';
 import { SnackbarComponent } from '../header/snackbar/snackbar.component';
 import { HeaderModule } from '../header/header.module';
+import { MessageDeleteComponent } from './component/timeline/messages/message-delete/message-delete.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { HeaderModule } from '../header/header.module';
     CommentsFooterComponent,
     FooterComponent,
     SnackbarComponent,
+    MessageDeleteComponent,
   ],
   imports: [
     CommonModule,

@@ -1,3 +1,24 @@
+.component-profile {
+  // width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+   background-color: #22252A;;
+}
+.profile {
+  // width: 600px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+section{
+  max-width: 600px;
+}
+
 .component {
   margin-top: 60px;
   display: flex;

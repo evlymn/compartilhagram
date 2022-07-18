@@ -11,6 +11,7 @@ import {
   UploadMetadata,
   StringFormat,
   UploadTask,
+
 } from '@angular/fire/storage';
 
 @Injectable({
@@ -28,6 +29,7 @@ export class StorageService {
   uploadBytes(path: string, file: any, metadata?: UploadMetadata) {
     const storageRef = ref(this.storage, path);
     return uploadBytes(storageRef, file, metadata);
+
   }
 
   uploadString(path: string, file: string, format: StringFormat, metadata?: UploadMetadata) {

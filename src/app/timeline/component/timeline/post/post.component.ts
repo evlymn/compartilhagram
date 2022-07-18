@@ -24,10 +24,10 @@ export class PostComponent implements OnInit {
     })
   }
 
-  savePost() {
+ async savePost() {
     if (!this.send) {
       this.send = true;
-      const task = this._service.savePost(this.file, this.postText);
+      const task = await this._service.savePost(this.file, this.postText);
       const subs = task.subscribe(sub => {
         this.progress = sub.progress;
         if (sub.progress == 0) {

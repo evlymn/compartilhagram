@@ -11,7 +11,7 @@ export class ProfileComponent implements OnInit {
   id = '';
   profile: any;
   posts: any;
-  constructor(private _route: ActivatedRoute, private _service: ProfileService, private _router: Router,) {
+  constructor(private _route: ActivatedRoute, public service: ProfileService, private _router: Router,) {
     this.id = this._route.snapshot.paramMap.get('id') as string;
     this.geProfile();
     this.getPosts();
@@ -19,17 +19,17 @@ export class ProfileComponent implements OnInit {
 
 
   logout() {
-    this._service.auth.signOut();
+    this.service.auth.signOut();
   }
   getPosts() {
-    this.posts = this._service.getPosts(this.id);
+    this.posts = this.service.getPosts(this.id);
   }
 
   showPost(id: string) {
     this._router.navigateByUrl('timeline/#' + id).catch(reason => console.log(reason));
   }
   geProfile() {
-    this._service.getProfile(this.id).then(p => {
+    this.service.getProfile(this.id).then(p => {
       this.profile = p.val();
     })
   }

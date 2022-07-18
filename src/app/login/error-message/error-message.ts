@@ -7,5 +7,5 @@ export const ErrorMessage: ErrorMessageBase = {
   'auth/weak-password': 'Essa senha é muuiito fraquinha, digite pelo menos 6 caracteres',
   'auth/user-disabled': 'Você está tentando logar, mas to vendo aqui que está desabilitado, estranho!',
   'auth/user-not-found': 'Oops, não te encontrei na base, tem certeza que já fez cadastro?',
-  'auth/wrong-password': 'Eita! Senha errada, quer recuperá-la?',
+  'auth/wrong-password': 'Eita! Senha errada, tem certeza que é essa?',
 }

@@ -1,35 +1,30 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
 /* eslint-disable quotes */
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-
+// functions.logger.info("Hello logs!", {structuredData: true});
 admin.initializeApp(functions.config().firebase);
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// export const onFinalizeObject =
+//   functions.storage.bucket().object().onFinalize((object) => {
 
-
-// eslint-disable-next-line max-len
-export const denormalizePosts = functions.database.ref('timeline/{key}').onCreate(async (snapshot, _) => {
-  denormalizeByUser(snapshot);
-  denornalizeOnlyImage(snapshot);
-});
-
+//     admin.database().ref('timeline/' + object.metadata?.id).update({
+//       objectName: object.name,
+//       objectId: object.id,
+//     });
+//   });
 
 export const onWriteTimeline =
-  functions.database.ref('timeline/{key}').onWrite(async (change) => {
+  functions.database.ref('timeline/messages/{key}').onWrite(async (change) => {
     if (!change.after.exists()) {
       functions.logger.info('delete');
-      onCreateTimeline(change.before);
+      onDeleteTimeline(change.before);
     }
     if (!change.before.exists()) {
       functions.logger.info('create');
-      onDeleteTimeline(change.after);
+      onCreateTimeline(change.after);
     }
     if ((change.after.exists() && change.before.exists()) &&
       change.before.val() !== change.after.val()) {
@@ -38,35 +33,37 @@ export const onWriteTimeline =
     }
   });
 
-// eslint-disable-next-line require-jsdoc
 function onCreateTimeline(snapshot: functions.database.DataSnapshot) {
-  const data = snapshot.val();
+  denormalizeByUser(snapshot);
+  denornalizeOnlyImage(snapshot);
 }
-// eslint-disable-next-line require-jsdoc
 function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
   const data = snapshot.val();
+  admin.database().ref(`timeline/messages_by_user/${data.uid}/${snapshot.key}`).remove();
+  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).remove();
+  if (data.objectName) {
+    admin.storage().bucket().file(data.objectName).delete();
+  }
 }
-// eslint-disable-next-line require-jsdoc
 function onUpdateTimeline(
-    snapshotBefore: functions.database.DataSnapshot,
+    _snapshotBefore: functions.database.DataSnapshot,
     snapshotAfter: functions.database.DataSnapshot): void {
-  const beforeData = snapshotBefore.val();
   const afterData = snapshotAfter.val();
+  const path = `timeline/messages_by_user/${afterData.uid}/${snapshotAfter.key}`;
+  admin.database().ref(path).update(afterData);
+  denornalizeOnlyImage(snapshotAfter);
 }
-
-
-// eslint-disable-next-line require-jsdoc
 function denormalizeByUser(snapshot: functions.database.DataSnapshot): void {
   const uid = snapshot.val().uid;
-  // eslint-disable-next-line max-len
-  admin.database().ref(`timeline_by_user/${uid}/${snapshot.key}`).set(snapshot.val());
+  const path = `timeline/messages_by_user/${uid}/${snapshot.key}`;
+  admin.database().ref(path).set(snapshot.val());
 }
-
-// eslint-disable-next-line require-jsdoc
 function denornalizeOnlyImage(snapshot: functions.database.DataSnapshot) {
   const postText = snapshot.val().postText;
+  const path = `timeline/messages_only_image/${snapshot.key}`;
   if (postText.trim().length == 0) {
-    // eslint-disable-next-line max-len
-    admin.database().ref(`timeline_only_image/${snapshot.key}`).set(snapshot.val());
+    admin.database().ref(path).set(snapshot.val());
+  } else {
+    admin.database().ref(path).remove();
   }
 }
