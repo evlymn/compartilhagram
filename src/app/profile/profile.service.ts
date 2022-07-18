@@ -10,7 +10,7 @@ export class ProfileService {
   constructor(private _realtime: RealtimeService, private _timeLineService: TimelineService, public auth: AuthenticationService) { }
 
   async getProfile(id: string) {
-    return this._realtime.get('user/' + id);
+    return this._realtime.get('users/' + id);
   }
 
   getPosts(id: string) {

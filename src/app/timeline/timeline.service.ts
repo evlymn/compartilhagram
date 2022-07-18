@@ -16,10 +16,6 @@ export class TimelineService {
     private _storage: StorageService,
     public auth: AuthenticationService) { }
 
-
-
-
-
   async getPost(id: string): Promise<any> {
     const post = await this._realtime.get(`timeline/messages/${id}`);
     if (post.exists())
@@ -159,17 +155,15 @@ export class TimelineService {
     )
     updloadTask.then(async (snapshot: { ref: { fullPath: string; }; }) => {
       const url = await this._storage.getDownloadURL(snapshot.ref.fullPath);
-      this._realtime.update('timeline/' + id, {
+      this._realtime.update('timeline/messages/' + id, {
         imageURL: url,
       });
     })
-
-
     return this._storage.percentage(updloadTask)
   }
 
   deletePost(id: string) {
-    this._realtime.delete('timeline/' + id);
+    this._realtime.delete('timeline/messages/' + id);
   }
 
 }

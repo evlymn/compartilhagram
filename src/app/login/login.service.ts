@@ -36,7 +36,7 @@ export class LoginService {
         displayName,
         photoURL: url
       })
-     await this.logUser('user/' + credentials.user.uid, {
+     await this.logUser('users/' + credentials.user.uid, {
         displayName,
         photoURL: url,
         dateTime: new Date().getTime(),
