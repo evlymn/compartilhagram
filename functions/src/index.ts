@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 /* eslint-disable quotes */
@@ -7,6 +8,51 @@ import * as admin from "firebase-admin";
 // functions.logger.info("Hello logs!", {structuredData: true});
 admin.initializeApp(functions.config().firebase);
 
+export const onUserDelete = functions.auth.user().onDelete(async (user) => {
+  const uid = user.uid;
+  admin.database().ref(`users/` + uid).remove().then(() => {
+    admin.database().ref(`timeline/messages`).orderByChild('uid').equalTo(uid).get().then((dataSnapshot) => {
+      dataSnapshot.forEach((a) => {
+        a.ref.remove().then(() => {
+          admin.database().ref(`timeline/comments/${a.ref.key}/`).orderByChild('uid').equalTo(uid).get().then((comments) => {
+            comments.forEach((c) => {
+              c.ref.remove();
+            });
+          });
+
+          admin.database().ref(`timeline/favorites/comments/${a.ref.key}`).orderByChild('uid').equalTo(uid).get().then((favorites) => {
+            favorites.forEach((f) => {
+              f.ref.remove();
+            });
+          });
+
+          admin.database().ref(`timeline/favorites/messages/${a.ref.key}`).orderByChild('uid').equalTo(uid).get().then((favorites) => {
+            favorites.forEach((f) => {
+              f.ref.remove();
+            });
+          });
+
+
+          // const keys = Object.keys(dataSnapshot.val());
+          // keys.forEach(k => {
+          //   // const comments =  await admin.database().ref(`timeline/comments/${k}`).orderByChild('uid').equalTo(uid).get();
+          //   // comments.forEach(c=> {
+          //   //   c.ref.remove();
+          //   // });
+          //   // const favoritesComments = await  admin.database().ref(`timeline/favorites/comments/${k}`).orderByChild('uid').equalTo(uid).get();
+          //   // favoritesComments.forEach(f=> {
+          //   //   f.ref.remove();
+          //   // });
+          //   // const favoritesMessages = await  admin.database().ref(`timeline/favorites/messages//${k}`).orderByChild('uid').equalTo(uid).get();
+          //   // favoritesMessages.forEach(f=> {
+          //   //   f.ref.remove();
+          //   // });
+          // });
+        });
+      });
+    });
+  });
+});
 // export const onFinalizeObject =
 //   functions.storage.bucket().object().onFinalize((object) => {
 
@@ -46,8 +92,8 @@ function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
   }
 }
 function onUpdateTimeline(
-    _snapshotBefore: functions.database.DataSnapshot,
-    snapshotAfter: functions.database.DataSnapshot): void {
+  _snapshotBefore: functions.database.DataSnapshot,
+  snapshotAfter: functions.database.DataSnapshot): void {
   const afterData = snapshotAfter.val();
   const path = `timeline/messages_by_user/${afterData.uid}/${snapshotAfter.key}`;
   admin.database().ref(path).update(afterData);
