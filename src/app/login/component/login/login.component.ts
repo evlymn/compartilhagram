@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     return this.form.get("rPassword");
   }
 
-  submited = false;
+  submitted = false;
   img64 = '';
   imageUrl = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
   avatarStyle = `background-image: url(${this.imageUrl})`;
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
   resetForm(formDirective: FormGroupDirective) {
 
     this.img64 = '';
-    this.submited = false
+    this.submitted = false
     this.changeAvatarStyle(this.imageUrl);
     this.isSignUp ? this.name?.enable() : this.name?.disable();
     this.isSignUp ?this.rPassword?.enable() : this.rPassword?.disable();
@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         this.file.nativeElement.value = null;
         if (result) {
-          this.submited = false;
+          this.submitted = false;
           this.img64 = result;
           this.changeAvatarStyle(this.img64)
         }
@@ -106,26 +106,26 @@ export class LoginComponent implements OnInit {
 
   async submit(formDirective: FormGroupDirective) {
     console.log('submit');
-    this.submited = true;
+    this.submitted = true;
     try {
       if (!this.isSignUp && this.form.valid) {
         await this._service.login(this.email?.value, this.password?.value);
       } else if (this.isSignUp && this.img64 && this.form.valid) {
         const uploadTaskSnapshot = await this._service.signUp(this.email?.value, this.password?.value, this.name?.value, this.img64);
-        const subs = uploadTaskSnapshot.subscribe(snapshopt => {
-          if (snapshopt.progress == 0) {
+        const subs = uploadTaskSnapshot.subscribe(snapshot => {
+          if (snapshot.progress == 0) {
             this.progressMode = 'determinate';
-            snapshopt.snapshot.task.then(_ => {
+            snapshot.snapshot.task.then(_ => {
               subs.unsubscribe();
               this.hintMessage = 'redirecionando...';
               this.progress = 0;
             })
           }
-          this.progress = Number.parseInt(snapshopt.progress.toFixed(0));
+          this.progress = Number.parseInt(snapshot.progress.toFixed(0));
         })
       }
     } catch (error: any) {
-      this.submited = false;
+      this.submitted = false;
 
       const erroDialog = this.dialog.open(ErrorMessageDialogComponent, {
         panelClass: 'ErrorMessageDialogComponent',
@@ -134,7 +134,6 @@ export class LoginComponent implements OnInit {
         data: ErrorMessage[error.code],
       });
 
-     // this._snackBar.open(`ocorreu um erro ${ErrorMessage[error.code]}`, 'ok');
       if (!this.isSignUp)
         formDirective.resetForm();
     }
