@@ -48,7 +48,7 @@
           type="password" required>
         <mat-icon matPrefix>lock</mat-icon>
         <mat-error *ngIf=" !rPassword?.getError('compareTo')">
-          Pode repetir, please?
+          Pode repetir, por favor?
         </mat-error>
         <mat-error *ngIf=" rPassword?.value?.length > 0 && (rPassword?.getError('compareTo'))">
           Oops, algo não confere aqui! 🙃
