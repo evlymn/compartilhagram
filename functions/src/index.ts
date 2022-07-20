@@ -76,10 +76,10 @@ function onCreateTimeline(snapshot: functions.database.DataSnapshot) {
 
 function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
   const data = snapshot.val();
-  admin.database().ref(`timeline/messages_by_user/${data.uid}/${snapshot.key}`).remove();
-  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).remove();
+  admin.database().ref(`timeline/messages_by_user/${data.uid}/${snapshot.key}`).remove().then(()=> null);
+  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).remove().then(()=> null);
   if (data.objectName) {
-    admin.storage().bucket().file(data.objectName).delete();
+    admin.storage().bucket().file(data.objectName).delete().then(()=> null);
   }
 }
 
@@ -88,22 +88,22 @@ function onUpdateTimeline(
   snapshotAfter: functions.database.DataSnapshot): void {
   const afterData = snapshotAfter.val();
   const path = `timeline/messages_by_user/${afterData.uid}/${snapshotAfter.key}`;
-  admin.database().ref(path).update(afterData);
+  admin.database().ref(path).update(afterData).then(()=> null);
   denormalizeOnlyImage(snapshotAfter);
 }
 
 function denormalizeByUser(snapshot: functions.database.DataSnapshot): void {
   const uid = snapshot.val().uid;
   const path = `timeline/messages_by_user/${uid}/${snapshot.key}`;
-  admin.database().ref(path).set(snapshot.val());
+  admin.database().ref(path).set(snapshot.val()).then(()=> null);
 }
 
 function denormalizeOnlyImage(snapshot: functions.database.DataSnapshot) {
   const postText = snapshot.val().postText;
   const path = `timeline/messages_only_image/${snapshot.key}`;
   if (postText.trim().length == 0) {
-    admin.database().ref(path).set(snapshot.val());
+    admin.database().ref(path).set(snapshot.val()).then(()=> null);
   } else {
-    admin.database().ref(path).remove();
+    admin.database().ref(path).remove().then(()=> null);
   }
 }
