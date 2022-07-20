@@ -71,7 +71,7 @@ export const onWriteTimeline =
 
 function onCreateTimeline(snapshot: functions.database.DataSnapshot) {
   denormalizeByUser(snapshot);
-  denornalizeOnlyImage(snapshot);
+  denormalizeOnlyImage(snapshot);
 }
 
 function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
@@ -89,7 +89,7 @@ function onUpdateTimeline(
   const afterData = snapshotAfter.val();
   const path = `timeline/messages_by_user/${afterData.uid}/${snapshotAfter.key}`;
   admin.database().ref(path).update(afterData);
-  denornalizeOnlyImage(snapshotAfter);
+  denormalizeOnlyImage(snapshotAfter);
 }
 
 function denormalizeByUser(snapshot: functions.database.DataSnapshot): void {
@@ -98,7 +98,7 @@ function denormalizeByUser(snapshot: functions.database.DataSnapshot): void {
   admin.database().ref(path).set(snapshot.val());
 }
 
-function denornalizeOnlyImage(snapshot: functions.database.DataSnapshot) {
+function denormalizeOnlyImage(snapshot: functions.database.DataSnapshot) {
   const postText = snapshot.val().postText;
   const path = `timeline/messages_only_image/${snapshot.key}`;
   if (postText.trim().length == 0) {
