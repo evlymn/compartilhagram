@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Database, query, ref, set, remove, update, get, push, child, limitToLast, onValue, Query, DataSnapshot, QueryConstraint, onChildChanged, onChildRemoved, onChildAdded } from "@angular/fire/database";
 
 import { Observable } from 'rxjs';
+import {DatabaseReference} from "@angular/fire/compat/database/interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,10 @@ export class RealtimeService {
   delete(path: string) {
     return remove(ref(this.db, path));
   }
+
+  // deleteByRef(refe:  DatabaseReference) {
+  //   return remove(ref(this.db, path));
+  // }
 
   onChildAdded(q: Query, callback: (snapshot: DataSnapshot, previousChildName?: string | null) => unknown) {
     return onChildAdded(q, callback);

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AuthenticationService} from "../../../shared/services/firebase/authentication/authentication.service";
 
 @Component({
   selector: 'app-timeline',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TimelineComponent implements OnInit {
 
-  constructor() { }
+  constructor(private auth: AuthenticationService) { }
 
   ngOnInit(): void {
   }

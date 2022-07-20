@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {
   Auth, signOut, user, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, sendEmailVerification, sendPasswordResetEmail, User, authState, onAuthStateChanged,
@@ -15,8 +15,9 @@ import {
   // reauthenticateWithPopup,
   // signInWithPopup,
 } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { onIdTokenChanged } from '@firebase/auth';
+import {Router} from '@angular/router';
+import {onIdTokenChanged} from '@firebase/auth';
+import {RealtimeService} from "../database/realtime.service";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class AuthenticationService {
   userCredentials!: UserCredential;
 
   constructor(private auth: Auth, private router: Router,
-    private ngZone: NgZone) {
+              private ngZone: NgZone, private _realtime: RealtimeService) {
     this.onAuthStateChanged();
   }
 
@@ -50,8 +51,14 @@ export class AuthenticationService {
 
   onIdTokenChanged() {
     onIdTokenChanged(this.auth, async usr => {
-      const tokenResult = await usr?.getIdTokenResult();
-      console.log('IdToken', tokenResult?.authTime);
+      if (usr) {
+        const tokenResult = await usr?.getIdTokenResult();
+        console.log('IdToken', tokenResult?.authTime);
+      } else {
+        //  console.log('else')
+        //this.signOut();
+      }
+
     })
   }
 
@@ -59,6 +66,7 @@ export class AuthenticationService {
     onAuthStateChanged(this.auth, usr => {
       this.user = usr;
       if (usr) {
+        this.onDeleteLogout(usr?.uid!);
         this.ngZone.run(() => {
           this.router.navigate(['/timeline']).catch(reason => console.log(reason));
         });
@@ -73,6 +81,17 @@ export class AuthenticationService {
   async signInWithEmailAndPassword(email: string, password: string) {
     this.userCredentials = await signInWithEmailAndPassword(this.auth, email, password);
     return this.userCredentials;
+  }
+
+  onDeleteLogout(uid: string) {
+    this._realtime.onValueChanges('system/users/onDelete/').subscribe(sub => {
+      console.log(sub);
+      if (sub.length > 0) {
+        if (sub.some(s => s.id == uid)) {
+          this.signOut();
+        }
+      }
+    })
   }
 
   async createUserWithEmailAndPassword(email: string, password: string) {
@@ -93,6 +112,6 @@ export class AuthenticationService {
   }
 
   signOut() {
-    signOut(this.auth);
+    signOut(this.auth).then(() => null);
   }
 }
