@@ -70,7 +70,6 @@ export class LoginComponent implements OnInit {
   }
 
   resetForm(formDirective: FormGroupDirective) {
-
     this.img64 = '';
     this.submitted = false
     this.changeAvatarStyle(this.imageUrl);
@@ -139,8 +138,21 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  openSnackBar() {
+    this._snackBar.open('Sinto Muito, vc foi desconetada(o)!', undefined, {
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      duration: 3000,
+     // panelClass: 'snackBar'
+    });
+  }
 
   ngOnInit(): void {
+    this._service.auth.logoutMessage.subscribe(b=>{
+      if(b){
+        this.openSnackBar();
+      }
+    })
   }
 }
 

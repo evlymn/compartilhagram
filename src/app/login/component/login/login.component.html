@@ -15,7 +15,7 @@
         <label class="avatar-label">Foto de perfil</label>
       </button>
       <small *ngIf="isSignUp && submitted && img64.trim().length == 0"> Quem sabe uma fotinha sua? 👆🏼👆🏼</small>
-      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+      <mat-form-field appearance="legacy" floatLabel="never" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
         <mat-label>&nbsp;nome</mat-label>
         <input matInput placeholder="&nbsp;ex: seu nome ué?!" formControlName="name">
         <mat-icon matPrefix>person</mat-icon>
@@ -23,9 +23,9 @@
           Qual seu nome?
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="legacy">
-        <mat-label>&nbsp;email</mat-label>
-        <input matInput placeholder="ex: seunome@gmail.com" type="email" required formControlName="email">
+      <mat-form-field appearance="legacy" floatLabel="never">
+        <mat-label>&nbsp;email</mat-label  >
+        <input matInput placeholder="email" type="email" required formControlName="email">
         <mat-icon matPrefix>email</mat-icon>
         <mat-error *ngIf="!email?.getError('email')">
           Qual seu email?
@@ -34,7 +34,7 @@
           Acho que vc digitou algo errado!
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="legacy">
+      <mat-form-field appearance="legacy" floatLabel="never">
         <mat-label>&nbsp;senha</mat-label>
         <input matInput placeholder="&nbsp;ex: *******" type="password" required formControlName="password">
         <mat-icon matPrefix>lock</mat-icon>
@@ -42,7 +42,7 @@
           Todo cadastro precisa de uma senha né não?
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="legacy" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+      <mat-form-field appearance="legacy" floatLabel="never" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
         <mat-label>&nbsp;senha de novo</mat-label>
         <input matInput [appCompareTo]="password" formControlName="rPassword" placeholder="&nbsp;ex: repetir *******"
           type="password" required>

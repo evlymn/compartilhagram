@@ -18,6 +18,7 @@ import {
 import {Router} from '@angular/router';
 import {onIdTokenChanged} from '@firebase/auth';
 import {RealtimeService} from "../database/realtime.service";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class AuthenticationService {
   private _route = '';
   user!: User | null;
   userCredentials!: UserCredential;
-
+  public logoutMessage = new Subject<boolean>();
   constructor(private auth: Auth, private router: Router,
               private ngZone: NgZone, private _realtime: RealtimeService) {
     this.onAuthStateChanged();
@@ -88,6 +89,7 @@ export class AuthenticationService {
       console.log(sub);
       if (sub.length > 0) {
         if (sub.some(s => s.id == uid)) {
+          this.logoutMessage.next(true);
           this.signOut();
         }
       }

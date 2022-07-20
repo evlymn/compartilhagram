@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
 
-  constructor(private auth: AuthenticationService, private storage: StorageService, private database: RealtimeService,  private router: Router) { }
+  constructor(public auth: AuthenticationService, private storage: StorageService, private database: RealtimeService,  private router: Router) { }
 
  async login(email: string, password: string) {
    await this.auth.signInWithEmailAndPassword(email, password);
