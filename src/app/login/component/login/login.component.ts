@@ -1,19 +1,20 @@
-import { Component, ElementRef, OnInit, ViewChild, } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ImageProfileDialogComponent } from './image-profile-dialog/image-profile-dialog.component';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { LoginAnimations } from '../../animations/login.animations'
-import { LoginService } from '../../login.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ProgressBarMode } from '@angular/material/progress-bar';
-import { ErrorMessage } from '../../error-message/error-message';
-import { ErrorMessageDialogComponent } from './error-message-dialog/error-message-dialog.component';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation,} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {ImageProfileDialogComponent} from './image-profile-dialog/image-profile-dialog.component';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
+import {LoginAnimations} from '../../animations/login.animations'
+import {LoginService} from '../../login.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ProgressBarMode} from '@angular/material/progress-bar';
+import {ErrorMessage} from '../../error-message/error-message';
+import {ErrorMessageDialogComponent} from './error-message-dialog/error-message-dialog.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   animations: LoginAnimations,
+  encapsulation: ViewEncapsulation.Emulated
 
 })
 export class LoginComponent implements OnInit {
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
     return this.form.get("rPassword");
   }
 
+  logout = false;
   submitted = false;
   img64 = '';
   imageUrl = 'https://material.angular.io/assets/img/examples/shiba2.jpg';
@@ -50,20 +52,21 @@ export class LoginComponent implements OnInit {
   hintMessage = 'Cadastrando usuária(o)...';
 
   constructor(public dialog: MatDialog,
-    private _formBuilder: FormBuilder,
-    private _service: LoginService,
-    private _snackBar: MatSnackBar) {
+              private _formBuilder: FormBuilder,
+              private _service: LoginService,
+              private _snackBar: MatSnackBar) {
     this.createForm();
   }
 
   createForm() {
     this.form = this._formBuilder.group({
-      name: new FormControl({ value: '', disabled: true }, [Validators.required],),
+      name: new FormControl({value: '', disabled: true}, [Validators.required],),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
-      rPassword: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      rPassword: new FormControl({value: '', disabled: true}, [Validators.required]),
     });
   }
+
   setSignInUp(formDirective: FormGroupDirective) {
     this.isSignUp = !this.isSignUp;
     this.resetForm(formDirective);
@@ -74,12 +77,13 @@ export class LoginComponent implements OnInit {
     this.submitted = false
     this.changeAvatarStyle(this.imageUrl);
     this.isSignUp ? this.name?.enable() : this.name?.disable();
-    this.isSignUp ?this.rPassword?.enable() : this.rPassword?.disable();
+    this.isSignUp ? this.rPassword?.enable() : this.rPassword?.disable();
     formDirective.resetForm();
     this.progress = 0;
     this.progressMode = 'indeterminate';
 
   }
+
   changeAvatarStyle(imageUrl: string) {
     this.avatarStyle = imageUrl ? `background-image: url(${imageUrl})` : this.avatarStyle;
   }
@@ -139,18 +143,21 @@ export class LoginComponent implements OnInit {
   }
 
   openSnackBar() {
-    this._snackBar.open('Sinto Muito, vc foi desconetada(o)!', undefined, {
+    this.logout = true;
+    console.log(this.logout);
+    return this._snackBar.open('Sinto Muito, vc foi desconetada(o)!', undefined, {
       horizontalPosition: 'center',
       verticalPosition: 'top',
       duration: 3000,
-     // panelClass: 'snackBar'
     });
   }
 
   ngOnInit(): void {
-    this._service.auth.logoutMessage.subscribe(b=>{
-      if(b){
-        this.openSnackBar();
+    this._service.auth.logoutMessage.subscribe(b => {
+      if (b) {
+        this.openSnackBar().afterDismissed().subscribe(() => {
+          window.location.reload();
+        });
       }
     })
   }

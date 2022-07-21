@@ -1,48 +1,46 @@
-.content {
+.login-content {
   width: 100%;
   height: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow-x: auto;
-  // background-color: #22252A;
  }
-mat-card {
-  // height: 500px;
 
-   width: 280px;
+.login-mat-card {
+  width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px,
-    rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px !important;
+  box-shadow: rgb(85, 91, 255) 0 0 0 3px, rgb(31, 193, 27) 0 0 0 6px, rgb(255, 217, 19) 0 0 0 9px,
+  rgb(255, 156, 85) 0 0 0 12px, rgb(255, 85, 85) 0 0 0 15px !important;
 }
-mat-card-title {
+
+.login-mat-card-title {
   text-align: center;
 }
-//mat-label {
-//  color: #56565f !important;
-//}
 
-input {
+.login-input {
   margin-left: 10px;
   margin-bottom: 5px;
 }
 
-mat-form-field,
-button,
-a {
+.login-mat-form-field,
+.login-button,
+.login-a {
   width: 250px !important;
 }
-button {
+
+.login-button {
   margin-top: 10px;
 }
-button > span {
+
+.login-button > .login-span {
   width: 100%;
 }
 
-form {
+.login-form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,8 +51,8 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -66,21 +64,22 @@ form {
 }
 
 .avatar-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: rgb(242, 0, 0);
 }
 
 .avatar-label {
-  margin-left: 5px;
+  margin: 0 0 0 5px;
 }
+
 .signInUp {
   margin-top: 40px;
 }
+
 ::ng-deep .ImageProfileDialogComponent {
   mat-dialog-container {
     padding: 6px;
   }
+
   mat-dialog-actions {
     height: 20px !important;
   }
@@ -90,11 +89,11 @@ form {
   color: chocolate;
 }
 
-small {
+.login-small {
   color: rgb(242, 0, 0);
 }
 
-mat-progress-bar {
+.login-mat-progress-bar {
   margin-top: 5px;
 }
 
@@ -105,7 +104,16 @@ mat-progress-bar {
 ::ng-deep .ErrorMessageDialogComponent {
   mat-dialog-container {
     // background-color: rgb(255, 249, 161);
-    box-shadow: rgb(255, 156, 85) 0px 0px 0px 3px !important;
+    box-shadow: rgb(255, 156, 85) 0 0 0 3px !important;
   }
+
   //rgb(255, 156, 85) 0px 0px 0px 6px, rgb(255, 85, 85) 0px 0px 0px 7.5px,
+}
+
+::ng-deep .mat-form-field-ripple {
+  background-color: transparent !important;
+}
+
+:host ::ng-deep .mat-form-field-label {
+  padding-left: 6px !important;
 }

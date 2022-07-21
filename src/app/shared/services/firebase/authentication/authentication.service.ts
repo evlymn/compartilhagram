@@ -18,7 +18,7 @@ import {
 import {Router} from '@angular/router';
 import {onIdTokenChanged} from '@firebase/auth';
 import {RealtimeService} from "../database/realtime.service";
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class AuthenticationService {
   private _route = '';
   user!: User | null;
   userCredentials!: UserCredential;
-  public logoutMessage = new Subject<boolean>();
+  public logoutMessage = new BehaviorSubject<Boolean>(false);
   constructor(private auth: Auth, private router: Router,
               private ngZone: NgZone, private _realtime: RealtimeService) {
     this.onAuthStateChanged();
@@ -72,9 +72,9 @@ export class AuthenticationService {
           this.router.navigate(['/timeline']).catch(reason => console.log(reason));
         });
       } else {
-        this.ngZone.run(() => {
-          this.router.navigate(['']).catch(reason => console.log(reason));
-        });
+        // this.ngZone.run(() => {
+          this.router.navigateByUrl('/').catch(reason => console.log(reason));
+        // });
       }
     });
   }
@@ -86,7 +86,6 @@ export class AuthenticationService {
 
   onDeleteLogout(uid: string) {
     this._realtime.onValueChanges('system/users/onDelete/').subscribe(sub => {
-      console.log(sub);
       if (sub.length > 0) {
         if (sub.some(s => s.id == uid)) {
           this.logoutMessage.next(true);

@@ -1,7 +1,8 @@
-<div class="content">
-  <mat-card>
-    <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="!submitted ? submit(formDirective): null">
-      <mat-card-title>
+
+<div class="login-content"  >
+  <mat-card class="login-mat-card"  *ngIf="!logout"  >
+    <form  #formDirective="ngForm" class="login-form" [formGroup]="form"  (ngSubmit)="!submitted ? submit(formDirective): null">
+      <mat-card-title class="login-mat-card-title">
         <img src="assets/images/compartilhagram-logo-yellow-angle.svg" width="100%" title="Compartilhagram" alt="Compartilhagram logo">
         <mat-card-subtitle>Sua vida On The Line!</mat-card-subtitle>
 
@@ -9,23 +10,23 @@
       <div class="avatar" (click)="file.click()" [@openCloseAvatar]=" isSignUp ? 'open' : 'closed'" matRipple
         [matRippleCentered]="true" [style]="avatarStyle">
       </div>
-      <button type="button" (click)="file.click()" mat-button color="avatar-button"
+      <button [class]="submitted && img64.trim().length == 0 ? 'avatar-button': ''" type="button" (click)="file.click()" mat-button
         [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
-        <mat-icon aria-hidden="false">face</mat-icon>
+        <mat-icon>face</mat-icon>
         <label class="avatar-label">Foto de perfil</label>
       </button>
-      <small *ngIf="isSignUp && submitted && img64.trim().length == 0"> Quem sabe uma fotinha sua? 👆🏼👆🏼</small>
-      <mat-form-field appearance="legacy" floatLabel="never" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
-        <mat-label>&nbsp;nome</mat-label>
-        <input matInput placeholder="&nbsp;ex: seu nome ué?!" formControlName="name">
+      <small class="login-small" *ngIf="isSignUp && submitted && img64.trim().length == 0"> Quem sabe uma fotinha sua? 👆🏼👆🏼</small>
+      <mat-form-field class="login-mat-form-field" appearance="legacy" floatLabel="never" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+
+        <input class="login-input" matInput placeholder="&nbsp;&nbsp;nome" formControlName="name">
         <mat-icon matPrefix>person</mat-icon>
         <mat-error>
           Qual seu nome?
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="legacy" floatLabel="never">
-        <mat-label>&nbsp;email</mat-label  >
-        <input matInput placeholder="email" type="email" required formControlName="email">
+      <mat-form-field  class="login-mat-form-field" appearance="legacy" floatLabel="never">
+
+        <input  class="login-input"  matInput placeholder="&nbsp;email" type="email" required formControlName="email">
         <mat-icon matPrefix>email</mat-icon>
         <mat-error *ngIf="!email?.getError('email')">
           Qual seu email?
@@ -34,17 +35,17 @@
           Acho que vc digitou algo errado!
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="legacy" floatLabel="never">
-        <mat-label>&nbsp;senha</mat-label>
-        <input matInput placeholder="&nbsp;ex: *******" type="password" required formControlName="password">
+      <mat-form-field  class="login-mat-form-field" appearance="legacy" floatLabel="never">
+
+        <input  class="login-input"  matInput placeholder="&nbsp;senha" type="password" required formControlName="password">
         <mat-icon matPrefix>lock</mat-icon>
         <mat-error>
           Todo cadastro precisa de uma senha né não?
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="legacy" floatLabel="never" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
-        <mat-label>&nbsp;senha de novo</mat-label>
-        <input matInput [appCompareTo]="password" formControlName="rPassword" placeholder="&nbsp;ex: repetir *******"
+      <mat-form-field  class="login-mat-form-field" appearance="legacy" floatLabel="never" [@openCloseFields]=" isSignUp ? 'open' : 'closed'">
+
+        <input  class="login-input"  matInput [appCompareTo]="password" formControlName="rPassword" placeholder="&nbsp;senha de novo"
           type="password" required>
         <mat-icon matPrefix>lock</mat-icon>
         <mat-error *ngIf=" !rPassword?.getError('compareTo')">
@@ -54,17 +55,17 @@
           Oops, algo não confere aqui! 🙃
         </mat-error>
       </mat-form-field>
-       <button type="submit" mat-flat-button color="primary" >
+       <button class="login-button" type="submit" mat-flat-button color="primary" >
         {{ isSignUp ? 'Registrar' : 'Logar' }}
       </button>
-      <mat-progress-bar [mode]="progressMode" [style]=" submitted && form.valid && img64  ? 'opacity:1' :  'opacity:0'"
+      <mat-progress-bar class="login-mat-progress-bar" [mode]="progressMode" [style]=" submitted && form.valid && img64  ? 'opacity:1' :  'opacity:0'"
         [value]="progress">
       </mat-progress-bar>
-      <small class="hint-submit" [style]="  submitted && form.valid && img64  ? 'opacity:1' :  'opacity:0'">{{hintMessage}} <span *ngIf="progress > 0">{{progress}}%</span> </small>
+      <small class="login-small hint-submit" [style]="  submitted && form.valid && img64  ? 'opacity:1' :  'opacity:0'">{{hintMessage}} <span *ngIf="progress > 0">{{progress}}%</span> </small>
+      <a mat-button class="login-a signInUp" color="primary" (click)="setSignInUp(formDirective)">{{ isSignUp ? "fazer login": "registre-se" }}
+      </a>
     </form>
-    <a mat-button class="signInUp" color="primary"
-      (click)="setSignInUp(formDirective)">{{ isSignUp ? "fazer login": "registre-se" }}
-    </a>
+
   </mat-card>
 </div>
 <input type="file" style="display: none;"  (change)="fileChangeEvent($event)" accept="image/x-png,image/gif,image/jpeg"
