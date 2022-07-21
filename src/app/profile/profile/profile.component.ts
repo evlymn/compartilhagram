@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
 
 
   logout() {
+    this.service.auth.logoutMessage.next({ from: 'logout'});
     this.service.auth.signOut();
   }
   getPosts() {

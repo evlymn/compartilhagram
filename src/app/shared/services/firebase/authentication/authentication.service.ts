@@ -27,7 +27,7 @@ export class AuthenticationService {
   private _route = '';
   user!: User | null;
   userCredentials!: UserCredential;
-  public logoutMessage = new BehaviorSubject<Boolean>(false);
+  public logoutMessage = new BehaviorSubject<{ from: string  }>({from: ''});
   constructor(private auth: Auth, private router: Router,
               private ngZone: NgZone, private _realtime: RealtimeService) {
     this.onAuthStateChanged();
@@ -88,7 +88,7 @@ export class AuthenticationService {
     this._realtime.onValueChanges('system/users/onDelete/').subscribe(sub => {
       if (sub.length > 0) {
         if (sub.some(s => s.id == uid)) {
-          this.logoutMessage.next(true);
+          this.logoutMessage.next({ from: 'delete'});
           this.signOut();
         }
       }
@@ -113,6 +113,6 @@ export class AuthenticationService {
   }
 
   signOut() {
-    signOut(this.auth).then(() => null);
+     signOut(this.auth);
   }
 }

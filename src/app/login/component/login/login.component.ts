@@ -108,7 +108,6 @@ export class LoginComponent implements OnInit {
   }
 
   async submit(formDirective: FormGroupDirective) {
-    console.log('submit');
     this.submitted = true;
     try {
       if (!this.isSignUp && this.form.valid) {
@@ -143,8 +142,7 @@ export class LoginComponent implements OnInit {
   }
 
   openSnackBar() {
-    this.logout = true;
-    console.log(this.logout);
+
     return this._snackBar.open('Sinto Muito, vc foi desconetada(o)!', undefined, {
       horizontalPosition: 'center',
       verticalPosition: 'top',
@@ -154,10 +152,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this._service.auth.logoutMessage.subscribe(b => {
-      if (b) {
+
+      if (b.from == 'delete') {
+        this.logout = true;
         this.openSnackBar().afterDismissed().subscribe(() => {
           window.location.reload();
         });
+      }else if(b.from == 'logout') {
+        this.logout = true;
+        window.location.reload();
       }
     })
   }
