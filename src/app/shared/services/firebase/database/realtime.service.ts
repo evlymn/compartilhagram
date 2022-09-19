@@ -59,6 +59,7 @@ export class RealtimeService {
     return new Observable<any[]>(subscriber => {
       onValue(query(ref(this.db, path), ...queryConstraints), snapshot => {
         const items = new Array<any>()
+
         snapshot.forEach(childSnapshot => {
           const newObj = childSnapshot.val()
           newObj[idField] = childSnapshot.key;

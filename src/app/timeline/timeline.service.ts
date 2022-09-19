@@ -183,8 +183,10 @@ export class TimelineService {
   }
 
   getPostsByUser(id: string) {
-    return this._realtime.onValueChanges('timeline/messages_by_user/' + id);
+      return this._realtime.onValueChanges('/timeline/messages_by_user/' + id);
   }
+
+
 
   async editPost(id: string, data: any) {
     return this._realtime.update('timeline/messages/' + id, data);
@@ -197,8 +199,9 @@ export class TimelineService {
     const local = `timeline/${uid}/${id}`;
     const objectName = `${local}/${file.name}`;
     const objectId = `compartilhagram-com.appspot.com/${objectName}`
+    console.log(uid);
     await this._realtime.set('timeline/messages/' + id, {
-      uid: uid,
+      uid,
       displayName: displayName!,
       photoURL: this.auth.user?.photoURL,
       objectName,

@@ -15,42 +15,42 @@ export const onSystemUserDeleteCreate =
   });
 export const onUserDelete =
   functions.auth.user().onDelete(async (user) => {
-  const uid = user.uid;
-  await admin.database().ref(`system/users/onDelete/` + uid).set({
-    logout: true,
-  });
-  admin.database().ref(`users/` + uid).remove().then(async () => {
-    admin.database().ref('timeline/messages/').orderByChild('uid').equalTo(uid).get().then(async (posts) => {
-      posts.forEach((post) => {
-        post.ref.remove();
+    const uid = user.uid;
+    await admin.database().ref(`system/users/onDelete/` + uid).set({
+      logout: true,
+    });
+    admin.database().ref(`users/` + uid).remove().then(async () => {
+      admin.database().ref('timeline/messages/').orderByChild('uid').equalTo(uid).get().then(async (posts) => {
+        posts.forEach((post) => {
+          post.ref.remove();
+        });
+
+        const commentsPath = await admin.database().ref('/timeline/look-ahead/comments/' + uid).get();
+        if (commentsPath.exists()) {
+          commentsPath.forEach((child) => {
+            admin.database().ref(child.val().path).remove();
+          });
+        }
+        await admin.database().ref('/timeline/look-ahead/comments/' + uid).remove();
+
+        const favCommentsPath = await admin.database().ref('/timeline/look-ahead/favorites/comments/' + uid).get();
+        if (favCommentsPath.exists()) {
+          favCommentsPath.forEach((child) => {
+            admin.database().ref(child.val().path).remove();
+          });
+        }
+        await admin.database().ref('/timeline/look-ahead/favorites/comments/' + uid).remove();
+
+        const favTimelinePath = await admin.database().ref('/timeline/look-ahead/favorites/timeline/' + uid).get();
+        if (favTimelinePath.exists()) {
+          favTimelinePath.forEach((child) => {
+            admin.database().ref(child.val().path).remove();
+          });
+        }
+        await admin.database().ref('/timeline/look-ahead/favorites/timeline/' + uid).remove();
       });
-
-      const commentsPath = await admin.database().ref('/timeline/look-ahead/comments/' + uid).get();
-      if (commentsPath.exists()) {
-        commentsPath.forEach((child) => {
-          admin.database().ref(child.val().path).remove();
-        });
-      }
-      await admin.database().ref('/timeline/look-ahead/comments/' + uid).remove();
-
-      const favCommentsPath = await admin.database().ref('/timeline/look-ahead/favorites/comments/' + uid).get();
-      if (favCommentsPath.exists()) {
-        favCommentsPath.forEach((child) => {
-          admin.database().ref(child.val().path).remove();
-        });
-      }
-      await admin.database().ref('/timeline/look-ahead/favorites/comments/' + uid).remove();
-
-      const favTimelinePath = await admin.database().ref('/timeline/look-ahead/favorites/timeline/' + uid).get();
-      if (favTimelinePath.exists()) {
-        favTimelinePath.forEach((child) => {
-          admin.database().ref(child.val().path).remove();
-        });
-      }
-      await admin.database().ref('/timeline/look-ahead/favorites/timeline/' + uid).remove();
     });
   });
-});
 
 export const onWriteTimeline =
   functions.database.ref('timeline/messages/{key}').onWrite(async (change) => {
@@ -75,11 +75,12 @@ function onCreateTimeline(snapshot: functions.database.DataSnapshot) {
 }
 
 function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
+  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).push()
   const data = snapshot.val();
-  admin.database().ref(`timeline/messages_by_user/${data.uid}/${snapshot.key}`).remove().then(()=> null);
-  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).remove().then(()=> null);
+  admin.database().ref(`timeline/messages_by_user/${data.uid}/${snapshot.key}`).remove().then(() => null);
+  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).remove().then(() => null);
   if (data.objectName) {
-    admin.storage().bucket().file(data.objectName).delete().then(()=> null);
+    admin.storage().bucket().file(data.objectName).delete().then(() => null);
   }
 }
 
@@ -88,22 +89,40 @@ function onUpdateTimeline(
   snapshotAfter: functions.database.DataSnapshot): void {
   const afterData = snapshotAfter.val();
   const path = `timeline/messages_by_user/${afterData.uid}/${snapshotAfter.key}`;
-  admin.database().ref(path).update(afterData).then(()=> null);
+  admin.database().ref(path).update(afterData).then(() => null);
   denormalizeOnlyImage(snapshotAfter);
 }
 
 function denormalizeByUser(snapshot: functions.database.DataSnapshot): void {
   const uid = snapshot.val().uid;
   const path = `timeline/messages_by_user/${uid}/${snapshot.key}`;
-  admin.database().ref(path).set(snapshot.val()).then(()=> null);
+  admin.database().ref(path).set(snapshot.val()).then(() => null);
 }
 
 function denormalizeOnlyImage(snapshot: functions.database.DataSnapshot) {
   const postText = snapshot.val().postText;
   const path = `timeline/messages_only_image/${snapshot.key}`;
   if (postText.trim().length == 0) {
-    admin.database().ref(path).set(snapshot.val()).then(()=> null);
+    admin.database().ref(path).set(snapshot.val()).then(() => null);
   } else {
-    admin.database().ref(path).remove().then(()=> null);
+    admin.database().ref(path).remove().then(() => null);
   }
 }
+
+
+//
+// export const onCreateData =
+//   functions.database.ref('/dados/criados/{key}').onCreate(
+//     (snapshot) => {
+//         functions.logger.info(snapshot.val());
+//       }
+//   );
+//
+//
+// export const onUpdateData =
+//   functions.database.ref('/dados/criados/{key}').onUpdate(
+//     (snapshot) => {
+//       functions.logger.info(snapshot.after.val());
+//     }
+//   );
+//

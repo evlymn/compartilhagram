@@ -24,6 +24,8 @@ export class PostComponent implements OnInit {
     })
   }
 
+
+
  async savePost() {
     if (!this.send) {
       this.send = true;

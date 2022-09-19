@@ -8,4 +8,5 @@ export const ErrorMessage: ErrorMessageBase = {
   'auth/user-disabled': 'Você está tentando logar, mas to vendo aqui que está desabilitado, estranho!',
   'auth/user-not-found': 'Oops, não te encontrei na base, tem certeza que já fez cadastro?',
   'auth/wrong-password': 'Eita! Senha errada, tem certeza que é essa?',
+
 }
