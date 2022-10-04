@@ -1,0 +1,7 @@
+<mat-icon [matMenuTriggerFor]="menu" matRipple
+          class="material-symbols-outlined">more_vert
+</mat-icon>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="edit()">editar</button>
+  <button mat-menu-item (click)="delete()">deletar</button>
+</mat-menu>

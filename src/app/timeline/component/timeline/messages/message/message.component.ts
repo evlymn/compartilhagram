@@ -52,20 +52,7 @@ export class MessageComponent implements OnInit {
     });
   }
 
-  delete() {
 
-    const d = this._snackBar.openFromComponent(MessageDeleteComponent, {
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: 'snackBar'
-    })
-
-    d.afterDismissed().subscribe(dismiss => {
-      if (dismiss.dismissedByAction) {
-        this._service.deletePost(this.message.id);
-      }
-    })
-  }
 
   edit() {
     this.editing = !this.editing;

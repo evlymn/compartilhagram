@@ -7,12 +7,10 @@
        <mat-card-title [routerLink]="'/profile/' + message.uid" matRipple>{{message.displayName}}</mat-card-title>
        <mat-card-subtitle>{{message.dateTime | date:'dd/MM/yyyy HH:mm'}}</mat-card-subtitle>
      </mat-card-header>
-     <mat-icon *ngIf="message.uid ==  currentUid" [matMenuTriggerFor]="menu" matRipple
-       class="material-symbols-outlined">more_vert</mat-icon>
-     <mat-menu #menu="matMenu">
-       <button mat-menu-item (click)="edit()">editar</button>
-       <button mat-menu-item (click)="delete()">deletar</button>
-     </mat-menu>
+
+     <app-message-menu [id]="message.id"  (onEdit)="edit()"  *ngIf="message.uid ==  currentUid"> </app-message-menu>
+
+
    </div>
    <div matRipple [matRippleCentered]="true" style="margin:0px ; padding:0px">
      <img mat-card-image [src]="message.imageURL"  alt="" (click)="doubleClick(message.id)">
