@@ -37,7 +37,8 @@ export class TimelineService {
   }
 
   getMessagesAsync() {
-    return this._realtime.onValueChanges('timeline/messages/');
+    return this._realtime.onValueChanges('timeline/messages/', 'id', orderByChild('bad_word'),
+      equalTo(true));
   }
 
   async setFavorite(id: string) {
@@ -163,10 +164,10 @@ export class TimelineService {
 
 
   deleteComment(postId: string, commentId: string) {
-    return this._realtime.delete(`timeline/comments/${postId}/${commentId}/`).then(()=> this.removeCommentLookAhead(commentId));
+    return this._realtime.delete(`timeline/comments/${postId}/${commentId}/`).then(() => this.removeCommentLookAhead(commentId));
   }
 
-  async removeCommentLookAhead(commentId:string) {
+  async removeCommentLookAhead(commentId: string) {
     this._realtime.get(`timeline/look-ahead/comments/${this.auth.user?.uid}`,
       orderByChild('commentId'), equalTo(commentId)).then(datasnapshot => {
       datasnapshot.forEach(child => {
@@ -183,12 +184,12 @@ export class TimelineService {
   }
 
   getPostsByUser(id: string) {
-      return this._realtime.onValueChanges('/timeline/messages_by_user/' + id);
+    return this._realtime.onValueChanges('/timeline/messages_by_user/' + id);
   }
 
 
-
   async editPost(id: string, data: any) {
+    data.bad_word = false;
     return this._realtime.update('timeline/messages/' + id, data);
   }
 

@@ -65,17 +65,34 @@ export const onWriteTimeline =
     if ((change.after.exists() && change.before.exists()) &&
       change.before.val() !== change.after.val()) {
       functions.logger.info('update');
-      onUpdateTimeline(change.before, change.after);
+      onUpdateTimeline(change.before, change.after).catch();
     }
   });
 
 function onCreateTimeline(snapshot: functions.database.DataSnapshot) {
   denormalizeByUser(snapshot);
   denormalizeOnlyImage(snapshot);
+  cleanBadWordsOnCreate(snapshot).catch();
+}
+
+async function replaceBadWords(snapshot: functions.database.DataSnapshot) {
+  const postText = snapshot.val().postText;
+  const dataSnapshot = await admin.database().ref('timeline/bad_words').get();
+  const badWords = dataSnapshot.val();
+  const re = new RegExp(Object.keys(badWords).join("|"), "gi");
+  return postText.replace(re, (matched: string) => badWords[matched.toLowerCase()]);
+}
+
+async function cleanBadWordsOnCreate(snapshot: functions.database.DataSnapshot) {
+  const newPostText = await replaceBadWords(snapshot);
+  await admin.database().ref('timeline/messages/' + snapshot.key).update({
+    postText: newPostText,
+    bad_word: true,
+  });
 }
 
 function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
-  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).push()
+  admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).push();
   const data = snapshot.val();
   admin.database().ref(`timeline/messages_by_user/${data.uid}/${snapshot.key}`).remove().then(() => null);
   admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).remove().then(() => null);
@@ -84,9 +101,17 @@ function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
   }
 }
 
-function onUpdateTimeline(
+async function onUpdateTimeline(
   _snapshotBefore: functions.database.DataSnapshot,
-  snapshotAfter: functions.database.DataSnapshot): void {
+  snapshotAfter: functions.database.DataSnapshot): Promise<void> {
+  if (!snapshotAfter.val().bad_word) {
+    const newPostText = await replaceBadWords(snapshotAfter);
+    await snapshotAfter.ref.update({
+      postText: newPostText,
+      bad_word: true,
+    });
+    return;
+  }
   const afterData = snapshotAfter.val();
   const path = `timeline/messages_by_user/${afterData.uid}/${snapshotAfter.key}`;
   admin.database().ref(path).update(afterData).then(() => null);
@@ -109,6 +134,19 @@ function denormalizeOnlyImage(snapshot: functions.database.DataSnapshot) {
   }
 }
 
+
+export const setBadWord = functions.https.onRequest((req, resp) => {
+  admin.database().ref('timeline/messages/').get().then((d) => {
+    d.forEach((c) => {
+        c.ref.update({
+            bad_word: true,
+          }
+        ).catch();
+      }
+    );
+  });
+  resp.end();
+});
 
 //
 // export const onCreateData =
