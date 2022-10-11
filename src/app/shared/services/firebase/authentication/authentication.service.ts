@@ -54,7 +54,7 @@ export class AuthenticationService {
     onIdTokenChanged(this.auth, async usr => {
       if (usr) {
         const tokenResult = await usr?.getIdTokenResult();
-        console.log('IdToken', tokenResult?.authTime);
+      //  console.log('IdToken', tokenResult?.authTime);
       } else {
         //  console.log('else')
         //this.signOut();

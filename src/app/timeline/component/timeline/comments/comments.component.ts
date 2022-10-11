@@ -21,7 +21,7 @@ export class CommentsComponent implements OnInit {
   async getPost() {
     this.post = await this._service.getPost(this.id);
     this._service.getPost(this.id).then(d=>{
-      console.log(d)
+  //    console.log(d)
     })
   }
   getComments() {

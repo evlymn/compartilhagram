@@ -35,13 +35,13 @@ export class ProfileComponent implements OnInit {
 
   }
   getPosts() {
-    console.log('ddd');
+  //  console.log('ddd');
 
 
 
     this.service.get('/timeline/messages_by_user/' + this.id).then(d=> {
 
-      console.log(d.val());
+     // console.log(d.val());
     })
 
 
@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
 
     this.service.getPosts(this.id).subscribe(d=>{
 
-      console.log(d.values());
+     // console.log(d.values());
     })
   }
 

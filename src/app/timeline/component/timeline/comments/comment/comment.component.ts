@@ -18,7 +18,7 @@ export class CommentComponent implements OnInit {
   }
 
   delete() {
-    console.log(this.postId, this.comment.id)
+ //   console.log(this.postId, this.comment.id)
     this._service.deleteComment(this.postId, this.comment.id);
   }
   favorite() {

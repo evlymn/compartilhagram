@@ -24,7 +24,7 @@ export class MessagesComponent implements OnInit, AfterViewChecked {
       d.forEach(c => {
         this.items.set(c.key?.toString(), c.val());
       })
-      console.log(this.items);
+     // console.log(this.items);
     })
   }
 

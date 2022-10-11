@@ -29,7 +29,8 @@ export class TimelineService {
   }
 
   getComments(id: string) {
-    return this._realtime.onValueChanges('timeline/comments/' + id);
+    return this._realtime.onValueChanges('timeline/comments/' + id, 'id', orderByChild('bad_word'),
+      equalTo(true));
   }
 
   async fileToBase64(file: File) {
@@ -151,6 +152,7 @@ export class TimelineService {
       id: postId,
       uid: this.auth.user?.uid,
       photoURL: this.auth.user?.photoURL,
+      bad_word: false,
     }).then(() => this.createCommentLookAhead(postId, commentId!, path))
   }
 
@@ -200,7 +202,7 @@ export class TimelineService {
     const local = `timeline/${uid}/${id}`;
     const objectName = `${local}/${file.name}`;
     const objectId = `compartilhagram-com.appspot.com/${objectName}`
-    console.log(uid);
+  //  console.log(uid);
     await this._realtime.set('timeline/messages/' + id, {
       uid,
       displayName: displayName!,

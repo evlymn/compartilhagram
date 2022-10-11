@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   fileChangeEvent(e: any) {
     this._router.navigate(['/post']).catch(reason => console.log(reason));
     if (this._route.snapshot.url[0]?.path.includes('timeline')) {
-      console.log('timeline')
+     // console.log('timeline')
       setTimeout(() => {
         this.service.fileMessage.next(e.target.files[0]);
       }, 140);
