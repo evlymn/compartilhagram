@@ -74,19 +74,9 @@ async function onUpdateComment(_snapshotBefore: functions.database.DataSnapshot,
   }
 }
 
-
 async function onCreateComment(snapshot: functions.database.DataSnapshot) {
   replaceBadWordsInReference(snapshot, 'comment').catch();
-  // replaceBadWordsInCommentsOnCreate(snapshot).catch();
 }
-//
-// async function replaceBadWordsInCommentsOnCreate(snapshot: functions.database.DataSnapshot) {
-//   const newComment = await replaceBadWords(snapshot.val().comment);
-//   await admin.database().ref(`timeline/comments/${snapshot.ref.parent?.key}/${snapshot.key}`).update({
-//     comment: newComment,
-//     bad_word: true,
-//   });
-// }
 
 export const onWriteTimeline =
   functions.database.ref('timeline/messages/{key}').onWrite(async (change) => {
@@ -109,7 +99,6 @@ function onCreateTimeline(snapshot: functions.database.DataSnapshot) {
   denormalizeByUser(snapshot);
   denormalizeOnlyImage(snapshot);
   replaceBadWordsInReference(snapshot, 'postText').catch();
-  // replaceBadWordsInTimelineOnCreate(snapshot).catch();
 }
 
 async function replaceBadWords(text: string) {
@@ -119,13 +108,6 @@ async function replaceBadWords(text: string) {
   return text.replace(re, (matched: string) => badWords[matched.toLowerCase()]);
 }
 
-// async function replaceBadWordsInTimelineOnCreate(snapshot: functions.database.DataSnapshot) {
-//   const newPostText = await replaceBadWords(snapshot.val().postText);
-//   await admin.database().ref('timeline/messages/' + snapshot.key).update({
-//     postText: newPostText,
-//     bad_word: true,
-//   });
-// }
 
 function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
   admin.database().ref(`timeline/messages_only_image/${snapshot.key}`).push();
