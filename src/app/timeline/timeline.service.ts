@@ -46,10 +46,9 @@ export class TimelineService {
     const path = `timeline/favorites/messages/${id}/${this.auth.user?.uid}`;
     const snapshot = await this._realtime.get(path);
     if (!snapshot.exists()) {
-      return this.createFavorite(id).then(() => this.createFavoriteLookAhead(id, path)
-      );
+      return this.createFavorite(id).catch();
     } else {
-      return this.removeFavorite(id).then(() => this.removeFavoriteLookAhead(id));
+      return this.removeFavorite(id).catch();
     }
   }
 
@@ -59,26 +58,11 @@ export class TimelineService {
     })
   }
 
-  async createFavoriteLookAhead(postId: string, path: string) {
-    return this._realtime.add(`timeline/look-ahead/favorites/timeline/${this.auth.user?.uid}`, {
-      postId, path
-    })
-  }
 
   async removeFavorite(id: string) {
     return this._realtime.delete(`timeline/favorites/messages/${id}/${this.auth.user?.uid}`);
   }
 
-  async removeFavoriteLookAhead(postId: string) {
-    this._realtime.get(`timeline/look-ahead/favorites/timeline/${this.auth.user?.uid}`,
-      orderByChild('postId'), equalTo(postId)).then(datasnapshot => {
-      datasnapshot.forEach(child => {
-        const location = child.ref.toString().substring(child.ref.root.toString().length)
-        this._realtime.delete(location);
-        return;
-      })
-    })
-  }
 
   async getTotalFavorites(id: string) {
     const total = await this._realtime.get(`timeline/favorites/messages/${id}`);
@@ -94,32 +78,10 @@ export class TimelineService {
     const path = `timeline/favorites/comments/${postId}/${commentId}/${this.auth.user?.uid}`;
     const snapshot = await this._realtime.get(path);
     if (!snapshot.exists()) {
-      return this.createFavoriteComment(postId, commentId).then(() =>
-        this.createCommentFavoriteLookAhead(postId, commentId, path)
-      )
+      return this.createFavoriteComment(postId, commentId).catch();
     } else {
-      return this.removeCommentFavorite(postId, commentId).then(() =>
-        this.removeCommentFavoriteLookAhead(postId, commentId, path)
-      )
+      return this.removeCommentFavorite(postId, commentId).catch();
     }
-  }
-
-  async createCommentFavoriteLookAhead(postId: string, commentId: string, path: string) {
-    return this._realtime.add(`timeline/look-ahead/favorites/comments/${this.auth.user?.uid}`, {
-      postId,
-      commentId,
-      path
-    });
-  }
-
-  async removeCommentFavoriteLookAhead(postId: string, commentId: string, path: string) {
-    this._realtime.get(`timeline/look-ahead/favorites/comments/${this.auth.user?.uid}`,
-      orderByChild('commentId'), equalTo(commentId)).then(datasnapshot => {
-      datasnapshot.forEach(child => {
-        const location = child.ref.toString().substring(child.ref.root.toString().length);
-        this._realtime.delete(location);
-      })
-    })
   }
 
   async createFavoriteComment(postId: string, commentId: string) {
@@ -153,31 +115,24 @@ export class TimelineService {
       uid: this.auth.user?.uid,
       photoURL: this.auth.user?.photoURL,
       bad_word: false,
-    }).then(() => this.createCommentLookAhead(postId, commentId!, path))
-  }
-
-  async createCommentLookAhead(postId: string, commentId: string, path: string) {
-    return this._realtime.add(`timeline/look-ahead/comments/${this.auth.user?.uid}`, {
-      postId,
-      commentId,
-      path
-    })
+    }).catch();
   }
 
 
   deleteComment(postId: string, commentId: string) {
-    return this._realtime.delete(`timeline/comments/${postId}/${commentId}/`).then(() => this.removeCommentLookAhead(commentId));
+    return this._realtime.delete(`timeline/comments/${postId}/${commentId}/`).catch();
   }
 
-  async removeCommentLookAhead(commentId: string) {
-    this._realtime.get(`timeline/look-ahead/comments/${this.auth.user?.uid}`,
-      orderByChild('commentId'), equalTo(commentId)).then(datasnapshot => {
-      datasnapshot.forEach(child => {
-        const location = child.ref.toString().substring(child.ref.root.toString().length);
-        this._realtime.delete(location);
-      })
-    })
-  }
+  //
+  // async removeCommentLookAhead(commentId: string) {
+  //   this._realtime.get(`timeline/look-ahead/comments/${this.auth.user?.uid}`,
+  //     orderByChild('commentId'), equalTo(commentId)).then(datasnapshot => {
+  //     datasnapshot.forEach(child => {
+  //       const location = child.ref.toString().substring(child.ref.root.toString().length);
+  //       this._realtime.delete(location);
+  //     })
+  //   })
+  // }
 
 
   async getTotalComments(id: string) {
@@ -202,7 +157,7 @@ export class TimelineService {
     const local = `timeline/${uid}/${id}`;
     const objectName = `${local}/${file.name}`;
     const objectId = `compartilhagram-com.appspot.com/${objectName}`
-  //  console.log(uid);
+    //  console.log(uid);
     await this._realtime.set('timeline/messages/' + id, {
       uid,
       displayName: displayName!,

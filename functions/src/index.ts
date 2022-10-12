@@ -53,18 +53,100 @@ export const onUserDelete =
     });
   });
 
-export const onWriteTimeLineComment = functions.database.ref('timeline/comments/{messageKey}/{commentKey}').onWrite(async (change) => {
-  if (!change.before.exists()) {
-    onCreateComment(change.after).catch();
-  }
-  if ((change.after.exists() && change.before.exists()) &&
-    change.before.val() !== change.after.val()) {
-    onUpdateComment(change.before, change.after).catch();
-  }
-  // if (!change.after.exists()) {
-  //   onDeleteTimeline(change.before);
-  // }
-});
+
+export const onWriteTimeLineFavorite =
+  functions.database.ref('timeline/favorites/messages/{key}/').onWrite(async (change, context) => {
+    if (!change.before.exists()) {
+      onCreateTimelineFavorite(change.after, context.auth?.uid ?? "0").catch();
+    }
+    // if ((change.after.exists() && change.before.exists()) &&
+    //   change.before.val() !== change.after.val()) {
+    //   onUpdateComment(change.before, change.after).catch();
+    // }
+    if (!change.after.exists()) {
+      onDeleteTimelineFavorite(change.before, context.auth?.uid ?? "0").catch();
+    }
+  });
+
+async function onCreateTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/favorites/messages/${snapshot.key}/${uid}`;
+  return admin.database().ref(`timeline/look-ahead/favorites/timeline/${uid}`).push({
+    postId: snapshot.key,
+    path,
+  });
+}
+
+async function onDeleteTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path =`timeline/look-ahead/favorites/timeline/${uid}`;
+  admin.database().ref(path).orderByChild('postId').equalTo(snapshot.key).get().then((users) => {
+    users.forEach((posts) => {
+      posts.ref.remove().catch();
+    });
+  });
+}
+
+export const onWriteTimeLineCommentFavorite =
+  functions.database.ref('timeline/favorites/comments/{postId}/{commentId}/').onWrite(async (change, context) => {
+    if (!change.before.exists()) {
+      onCreateCommentFavorite(change.after, context.auth?.uid ?? "0").catch();
+    }
+    // if ((change.after.exists() && change.before.exists()) &&
+    //   change.before.val() !== change.after.val()) {
+    //   onUpdateComment(change.before, change.after).catch();
+    // }
+    if (!change.after.exists()) {
+      onDeleteCommentFavorite(change.before, context.auth?.uid ?? "0").catch();
+    }
+  });
+
+async function onCreateCommentFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/favorites/comments/${snapshot.ref.parent?.key}/${snapshot.key}/${uid}`;
+  return admin.database().ref(`timeline/look-ahead/favorites/comments/${uid}`).push({
+    postId: snapshot.ref.parent?.key,
+    commentId: snapshot.key,
+    path,
+  });
+}
+
+async function onDeleteCommentFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+  removeCommentFavoriteLookAhead(snapshot, uid).catch();
+}
+
+async function removeCommentFavoriteLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/look-ahead/favorites/comments/${uid}`;
+  admin.database().ref(path).orderByChild('commentId').equalTo(snapshot.key).get().then((users) => {
+    users.forEach((comments) => {
+      comments.ref.remove().catch();
+    });
+  });
+}
+
+export const onWriteTimeLineComment =
+  functions.database.ref('timeline/comments/{messageKey}/{commentKey}').onWrite(async (change, context) => {
+    if (!change.before.exists()) {
+      onCreateComment(change.after, context.auth?.uid ?? "0").catch();
+    }
+    if ((change.after.exists() && change.before.exists()) &&
+      change.before.val() !== change.after.val()) {
+      onUpdateComment(change.before, change.after).catch();
+    }
+    if (!change.after.exists()) {
+      onDeleteComment(change.before, context.auth?.uid ?? "0").catch();
+    }
+  });
+
+async function onDeleteComment(snapshot: functions.database.DataSnapshot, uid: string) {
+  removeCommentLookAhead(snapshot, uid).catch();
+}
+
+async function removeCommentLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/look-ahead/comments/${uid}`;
+  admin.database().ref(path).orderByChild('commentId').equalTo(snapshot.key).get().then((users) => {
+    users.forEach((comments) => {
+      comments.ref.remove().catch();
+    });
+  });
+}
 
 async function onUpdateComment(_snapshotBefore: functions.database.DataSnapshot,
                                snapshotAfter: functions.database.DataSnapshot): Promise<void> {
@@ -74,8 +156,18 @@ async function onUpdateComment(_snapshotBefore: functions.database.DataSnapshot,
   }
 }
 
-async function onCreateComment(snapshot: functions.database.DataSnapshot) {
+async function onCreateComment(snapshot: functions.database.DataSnapshot, uid: string) {
   replaceBadWordsInReference(snapshot, 'comment').catch();
+  createCommentLookAhead(snapshot, uid).catch();
+}
+
+async function createCommentLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/comments/${snapshot.ref.parent?.key}/${snapshot.key}`;
+  admin.database().ref(`timeline/look-ahead/comments/${uid}`).push({
+    postId: snapshot.ref.parent?.key,
+    commentId: snapshot.key,
+    path,
+  });
 }
 
 export const onWriteTimeline =
@@ -134,7 +226,7 @@ async function onUpdateTimeline(
 
 async function replaceBadWordsInReference(snapshot: functions.database.DataSnapshot, fieldText: string) {
   const newText = await replaceBadWords(snapshot.val()[fieldText]);
-  const data = JSON.parse(`{ "${fieldText}": "${newText}" , "bad_word": true}`);
+  const data = JSON.parse(`{ "${fieldText}": "${newText.replace(/"/gi, '')}" , "bad_word": true}`);
   await snapshot.ref.update(data);
 }
 
