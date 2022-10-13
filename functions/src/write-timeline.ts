@@ -5,6 +5,7 @@
 import * as functions from "firebase-functions";
 import {replaceBadWordsInReference} from "./bad-words";
 import * as admin from "firebase-admin";
+import {deleteTimelineFavorite} from "./write-timeline-favorite";
 
 
 export const writeTimeline =
@@ -38,6 +39,7 @@ function onDeleteTimeline(snapshot: functions.database.DataSnapshot) {
   if (data.objectName) {
     admin.storage().bucket().file(data.objectName).delete().then(() => null);
   }
+  deleteTimelineFavorite(snapshot, data.uid);
 }
 
 async function onUpdateTimeline(

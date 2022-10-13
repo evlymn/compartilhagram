@@ -5,6 +5,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {replaceBadWordsInReference} from "./bad-words";
+import {removeCommentFavoriteLookAhead} from "./write-timeline-comment-favorite";
 
 
 export const writeTimeLineComment =
@@ -54,6 +55,7 @@ async function removeCommentLookAhead(snapshot: functions.database.DataSnapshot,
       comments.ref.remove().catch();
     });
   });
+  removeCommentFavoriteLookAhead(snapshot, uid).catch();
 }
 
 

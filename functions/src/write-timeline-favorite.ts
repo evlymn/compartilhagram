@@ -1,4 +1,3 @@
-
 /* eslint-disable indent */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
@@ -12,16 +11,16 @@ export const writeTimeLineFavorite =
     if (!change.before.exists()) {
       onCreateTimelineFavorite(change.after, context.auth?.uid ?? "0").catch();
     }
-    // if ((change.after.exists() && change.before.exists()) &&
-    //   change.before.val() !== change.after.val()) {
-    //   onUpdateComment(change.before, change.after).catch();
-    // }
     if (!change.after.exists()) {
       onDeleteTimelineFavorite(change.before, context.auth?.uid ?? "0").catch();
     }
   });
 
 async function onCreateTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+  return createTimelineFavorite(snapshot, uid);
+}
+
+function createTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
   const path = `timeline/favorites/messages/${snapshot.key}/${uid}`;
   return admin.database().ref(`timeline/look-ahead/favorites/timeline/${uid}`).push({
     postId: snapshot.key,
@@ -30,10 +29,18 @@ async function onCreateTimelineFavorite(snapshot: functions.database.DataSnapsho
 }
 
 async function onDeleteTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
-  const path =`timeline/look-ahead/favorites/timeline/${uid}`;
+  deleteTimelineFavorite(snapshot, uid,);
+}
+
+export function deleteTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/look-ahead/favorites/timeline/${uid}`;
   admin.database().ref(path).orderByChild('postId').equalTo(snapshot.key).get().then((users) => {
-    users.forEach((posts) => {
-      posts.ref.remove().catch();
-    });
+    if (users.exists()) {
+      users.forEach((posts) => {
+        if (posts.exists()) {
+          posts.ref.remove().catch();
+        }
+      });
+    }
   });
 }

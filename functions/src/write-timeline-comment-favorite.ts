@@ -29,11 +29,15 @@ async function onDeleteCommentFavorite(snapshot: functions.database.DataSnapshot
   removeCommentFavoriteLookAhead(snapshot, uid).catch();
 }
 
-async function removeCommentFavoriteLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
+export async function removeCommentFavoriteLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
   const path = `timeline/look-ahead/favorites/comments/${uid}`;
   admin.database().ref(path).orderByChild('commentId').equalTo(snapshot.key).get().then((users) => {
-    users.forEach((comments) => {
-      comments.ref.remove().catch();
-    });
+    if (users.exists()) {
+      users.forEach((comments) => {
+        if (comments.exists()) {
+          comments.ref.remove().catch();
+        }
+      });
+    }
   });
 }
