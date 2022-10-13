@@ -1,12 +1,14 @@
 .component-profile {
   // width: 100%;
+  //margin-top: 50px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-   background-color: #22252A;;
+  background-color: #22252A;;
 }
+
 .profile {
   // width: 600px;
   max-width: 600px;
@@ -15,7 +17,7 @@
   justify-content: center;
 }
 
-section{
+section {
   max-width: 600px;
 }
 
@@ -30,6 +32,7 @@ section{
   color: whitesmoke;
   padding-bottom: 3px;
 }
+
 .avatar {
   width: 70px;
   border-radius: 35px;
@@ -56,6 +59,6 @@ section{
   background-size: cover
 }
 
-h3{
+h3 {
   margin-bottom: 5px;
 }

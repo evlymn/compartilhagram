@@ -1,20 +1,18 @@
 <section class="component-profile">
-<section class="profile">
+  <section class="profile">
+    <app-header></app-header>
+    <section class="component" *ngIf="profile?.photoURL">
+      <img class="avatar" [src]="profile?.photoURL" alt="avatar">
+      <h3>{{profile?.displayName}}</h3>
 
+      <a mat-button (click)="logout()" *ngIf="profile.uid == service.auth.user?.uid" color="accent"
+         target="_blank">sair</a>
+    </section>
+    <div class="posts" [style]=" profile ? '':  'margin-top: 60px'  "  >
+      <div class="image" [routerLink]="['/timeline']" [fragment]="item.id" matRipple *ngFor="let item of posts | async"
+           [style]="'background-image: url('+ item.imageURL + ')'">
 
-<app-header></app-header>
-<section class="component" *ngIf="profile?.photoURL">
-  <img class="avatar" [src]="profile?.photoURL" alt="avatar">
-  <h3>{{profile?.displayName}}</h3>
-
-  <a mat-button (click)="logout()" *ngIf="profile.uid == service.auth.user?.uid"  color="accent"  target="_blank">sair</a>
-</section>
-<div class="posts">
-  <div class="image" [routerLink]="['/timeline']" [fragment]="item.id" matRipple *ngFor="let item of posts | async"
-    [style]="'background-image: url('+ item.imageURL + ')'">
-
-  </div>
-
-</div>
-</section>
+      </div>
+    </div>
+  </section>
 </section>
