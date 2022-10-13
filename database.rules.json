@@ -16,11 +16,11 @@
     },
     "timeline": {
       "messages": {
-        ".indexOn": "uid",
+        ".indexOn": ["uid","bad_word"],
         ".read": "auth != null",
         "$key": {
           ".read": "auth != null",
-          ".write": "auth != null && newData.child('uid').val() == auth.uid "
+          ".write": "auth != null "
         }
       },
       "messages_by_user": {
@@ -30,7 +30,7 @@
       },
       "comments": {
         "$key": {
-          ".indexOn": "uid",
+          ".indexOn": ["uid","bad_word"],
           ".read": "auth != null",
           ".write": "auth != null"
         }
@@ -55,23 +55,23 @@
         "comments": {
           "$key": {
             ".indexOn": "commentId",
-            ".read": "auth != null",
-            ".write": "auth != null"
+            ".read": false,
+            ".write": false
           }
         },
         "favorites": {
           "timeline": {
             "$key": {
               ".indexOn": "postId",
-              ".read": "auth != null",
-              ".write": "auth != null"
+              ".read": false,
+              ".write":false
             }
           },
           "comments": {
             "$key": {
               ".indexOn": "commentId",
-              ".read": "auth != null",
-              ".write": "auth != null"
+              ".read": false,
+              ".write": false
             }
           }
         }
