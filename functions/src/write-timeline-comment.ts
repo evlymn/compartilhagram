@@ -4,7 +4,7 @@
 /* eslint-disable quotes */
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import {replaceBadWordsInReference} from "./bad-words";
+import {replaceBadWordsInReference} from "./shared/bad-words";
 import {removeCommentFavoriteLookAhead} from "./write-timeline-comment-favorite";
 
 
@@ -45,7 +45,9 @@ async function onUpdateComment(_snapshotBefore: functions.database.DataSnapshot,
 }
 
 async function onDeleteComment(snapshot: functions.database.DataSnapshot, uid: string) {
-  removeCommentLookAhead(snapshot, uid).catch();
+  admin.database().ref(`timeline/favorites/comments/${snapshot.ref.parent?.key}/${snapshot.key}`).remove().then(() => {
+    removeCommentLookAhead(snapshot, uid).catch();
+  });
 }
 
 async function removeCommentLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {

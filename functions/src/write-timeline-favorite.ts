@@ -4,7 +4,7 @@
 /* eslint-disable quotes */
 
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import {createFavoriteLookAhead, removeFavoriteLookAhead} from "./shared/favorites-look-ahead";
 
 export const writeTimeLineFavorite =
   functions.database.ref('timeline/favorites/messages/{key}/').onWrite(async (change, context) => {
@@ -17,30 +17,23 @@ export const writeTimeLineFavorite =
   });
 
 async function onCreateTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
-  return createTimelineFavorite(snapshot, uid);
+  return createTimelineFavoriteLookAhead(snapshot, uid);
 }
 
-function createTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
+function createTimelineFavoriteLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
   const path = `timeline/favorites/messages/${snapshot.key}/${uid}`;
-  return admin.database().ref(`timeline/look-ahead/favorites/timeline/${uid}`).push({
+  createFavoriteLookAhead(`timeline/look-ahead/favorites/timeline/${uid}/${snapshot.key}`, {
     postId: snapshot.key,
     path,
-  });
+  }).catch();
 }
 
 async function onDeleteTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
-  deleteTimelineFavorite(snapshot, uid,);
+  removeTimelineFavoriteLookAhead(snapshot, uid);
 }
 
-export function deleteTimelineFavorite(snapshot: functions.database.DataSnapshot, uid: string) {
-  const path = `timeline/look-ahead/favorites/timeline/${uid}`;
-  admin.database().ref(path).orderByChild('postId').equalTo(snapshot.key).get().then((users) => {
-    if (users.exists()) {
-      users.forEach((posts) => {
-        if (posts.exists()) {
-          posts.ref.remove().catch();
-        }
-      });
-    }
-  });
+export function removeTimelineFavoriteLookAhead(snapshot: functions.database.DataSnapshot, uid: string) {
+  const path = `timeline/look-ahead/favorites/timeline/${uid}/${snapshot.key}/`;
+  removeFavoriteLookAhead(path).catch();
+
 }
