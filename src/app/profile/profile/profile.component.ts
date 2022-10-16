@@ -2,45 +2,53 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ProfileService} from '../profile.service';
 
+interface Profile {
+  uid: string,
+  photoURL: string,
+  imageURL: string,
+  displayName: string,
+}
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  id = '';
-  profile: any;
+  profileId = '';
+  profile!: Profile;
   posts: any;
+  currentUserUid? : string;
 
-  constructor(private _route: ActivatedRoute, public service: ProfileService, private _router: Router,) {
-    this.id = this._route.snapshot.paramMap.get('id') as string;
-    this.service.auth.authState.subscribe(() => {
-      this.geProfile();
-      this.getPosts();
+  constructor(private _route: ActivatedRoute, private _service: ProfileService, private _router: Router,) {
+    this.requestProfileId();
+    this.currentUserUid = _service.auth.user?.uid;
+    this._service.auth.authState.subscribe(() => {
+      this.geProfileInfo();
+      this.getProfilePosts();
     })
   }
 
+  requestProfileId() {
+    console.log(this.profile?.uid);
+    this.profileId = this._route.snapshot.paramMap.get('profileId') as string;
+  }
+
   logout() {
-    this.service.auth.logoutMessage.next({from: 'logout'});
-    this.service.auth.signOut();
+    this._service.auth.logoutMessage.next({from: 'logout'});
+    this._service.auth.signOut();
   }
 
-  getPosts() {
-    this.posts = this.service.getPosts(this.id);
+  getProfilePosts() {
+    this.posts = this._service.getPosts(this.profileId);
   }
 
-  showPost(id: string) {
-    this._router.navigateByUrl('timeline/#' + id).catch(reason => console.log(reason));
-  }
-
-  geProfile() {
-    this.service.getProfile(this.id).then(p => {
+  geProfileInfo() {
+    this._service.getProfile(this.profileId).then(p => {
       this.profile = p.val();
     })
   }
 
   ngOnInit(): void {
-    this.geProfile();
   }
-
 }

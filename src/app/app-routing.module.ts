@@ -8,7 +8,7 @@ import { CommentsComponent } from './timeline/component/timeline/comments/commen
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'profile/:id', component: ProfileComponent },
+  { path: 'profile/:profileId', component: ProfileComponent },
   { path: 'timeline', component: TimelineComponent },
   { path: 'timeline/:id', component: TimelineComponent },
   { path: 'post', component: PostComponent },
